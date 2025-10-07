@@ -16,7 +16,7 @@ Este repositório contém a interface web do projeto, desenvolvida com **Next.js
 ---
 
 ## 📁 Estrutura de Pastas
-
+```bash
 src/
 ├─ app/
 │ ├─ (public)/ # Páginas públicas: landing, login, registro
@@ -34,6 +34,7 @@ src/
 │ └─ cards/ # Cards de jogos, usuários, etc.
 ├─ lib/ # Funções utilitárias e helpers
 └─ types/ # Tipagens globais TypeScript
+```
 
 ---
 
