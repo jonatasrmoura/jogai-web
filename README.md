@@ -1,36 +1,132 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🟣 Jogaí — Frontend
 
-## Getting Started
+**Jogaí** é uma plataforma onde usuários podem **trocar, vender ou emprestar jogos** de forma simples e moderna.  
+Este repositório contém a interface web do projeto, desenvolvida com **Next.js** e **TailwindCSS**.
 
-First, run the development server:
+---
+
+## 🚀 Tecnologias Utilizadas
+
+- ⚡ [Next.js 14](https://nextjs.org/) — App Router
+- 🟦 [TypeScript](https://www.typescriptlang.org/)
+- 🎨 [Tailwind CSS](https://tailwindcss.com/)
+- 🧱 [shadcn/ui](https://ui.shadcn.com/) — Componentes prontos e estilizados
+- ✨ [Framer Motion](https://www.framer.com/motion/) — Animações modernas
+
+---
+
+## 📁 Estrutura de Pastas
+
+src/
+├─ app/
+│ ├─ (public)/ # Páginas públicas: landing, login, registro
+│ ├─ (client)/ # Páginas autenticadas: dashboard, games, profile
+│ │ ├─ dashboard/
+│ │ ├─ games/
+│ │ ├─ profile/
+│ │ └─ layout.tsx
+│ ├─ globals.css
+│ └─ layout.tsx
+├─ components/
+│ ├─ ui/ # Botões, inputs, etc.
+│ ├─ layout/ # Header, Footer, Sidebar
+│ ├─ forms/ # Formulários (login, cadastro)
+│ └─ cards/ # Cards de jogos, usuários, etc.
+├─ lib/ # Funções utilitárias e helpers
+└─ types/ # Tipagens globais TypeScript
+
+---
+
+## 🧪 Funcionalidades — Primeira Versão (MVP)
+
+- 🌐 **Landing Page** — apresentação da plataforma + CTA para login/cadastro
+- 🔐 **Login & Registro** — autenticação simulada localmente (backend será integrado depois)
+- 🧭 **Dashboard** — visão geral do usuário, jogos disponíveis e ações rápidas
+- 🕹 **Listagem de Jogos** — explorar jogos para troca, venda ou empréstimo
+- 📝 **Detalhe do Jogo** — visualizar informações e opções (trocar, comprar, emprestar)
+- 👤 **Perfil do Usuário** — jogos cadastrados e histórico de trocas/empréstimos
+
+---
+
+## 🛠️ Como Rodar o Projeto Localmente
+
+### 1. Clonar o repositório
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/seu-usuario/jogai-frontend.git
+cd jogai-frontend
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Instalar dependências
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+`npm install`
+ou
+`yarn install`
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3. Rodar o servidor de desenvolvimento
 
-## Learn More
+`npm run dev`
+ou
+`yarn dev`
 
-To learn more about Next.js, take a look at the following resources:
+O app ficará disponível em: http://localhost:3000
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🧰 Comandos Úteis
 
-## Deploy on Vercel
+| Comando         | Descrição                            |
+| --------------- | ------------------------------------ |
+| `npm run dev`   | Inicia o servidor de desenvolvimento |
+| `npm run build` | Gera build de produção               |
+| `npm run start` | Inicia o servidor com a build gerada |
+| `npm run lint`  | Verifica problemas de lint no código |
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+---
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## 📝 Boas Práticas
+
+• ✍️ Componentização: manter componentes reutilizáveis em src/components.
+
+• 🧠 Separar responsabilidades: UI, lógica e tipagens bem organizadas.
+
+• 🌈 Estilo consistente: Tailwind + shadcn/ui como base de design.
+
+• 🧪 Testes: serão adicionados posteriormente para componentes críticos.
+
+---
+
+## 📌 Roadmap
+
+• Criar estrutura inicial com rotas e layout base
+
+• Desenvolver Landing Page
+
+• Criar telas de Login e Registro
+
+• Implementar Dashboard com listagem de jogos
+
+• Adicionar modal de detalhes do jogo
+
+• Integrar autenticação real (futura etapa backend)
+
+• Melhorias de UI/UX e responsividade
+
+---
+
+## 👨‍💻 Autor
+
+Jonatas Rosa Moura
+Desenvolvedor Fullstack • JavaScript | TypeScript | Next.js | React Native
+LinkedIn [Link Text](https://www.linkedin.com/in/jonatas-rosa-moura-235574193/) • GitHub [Link Text](https://github.com/jonatasrmoura).
+
+---
+
+## 🪪 Licença
+
+Este projeto está licenciado sob a MIT License.
+Sinta-se livre para usar e modificar conforme necessário.
+
+---
+
+Quer que eu **gere esse README.md como arquivo** para você baixar? (posso salvar e te mandar o link `.md`) 📝💾
