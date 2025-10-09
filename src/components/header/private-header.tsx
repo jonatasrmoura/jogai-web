@@ -5,6 +5,7 @@ import { Bell } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { JogaiIcon } from "../icons/jogai-icon";
+import Image from "next/image";
 
 export function PrivateHeader() {
   const router = useRouter();
@@ -49,10 +50,12 @@ export function PrivateHeader() {
 
           <div className="relative">
             <button className="flex items-center gap-2 rounded-full border p-1.5 hover:bg-gray-50">
-              <img
+              <Image
                 src="/avatar-placeholder.png"
                 alt="User avatar"
                 className="h-8 w-8 rounded-full object-cover"
+                width={250}
+                height={250}
               />
             </button>
 
