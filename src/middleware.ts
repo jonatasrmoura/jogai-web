@@ -4,6 +4,7 @@ import { cookies } from "next/headers";
 const publicRoutes = [
   { path: "/sign-in", whenAuthenticated: "redirect" },
   { path: "/register", whenAuthenticated: "redirect" },
+  { path: "/home", whenAuthenticated: "redirect" },
   { path: "/pricing", whenAuthenticated: "next" },
 ] as const;
 

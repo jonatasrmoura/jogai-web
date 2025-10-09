@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { Roboto, Roboto_Mono } from "next/font/google";
 import "./globals.css";
+import { PublicHeader } from "../components/header/public-header";
+import { PrivateHeader } from "../components/header/private-header";
+import { Footer } from "../components/footer";
 
 const roboto = Roboto({
   variable: "--font-roboto-sans",
@@ -23,10 +26,14 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const isAuthenticated = false; // <- aqui depois você troca pela verificação real
+
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body className={`${roboto.variable} ${robotoMono.variable} antialiased`}>
-        {children}
+        {isAuthenticated ? <PrivateHeader /> : <PublicHeader />}
+        <main>{children}</main>
+        <Footer />
       </body>
     </html>
   );

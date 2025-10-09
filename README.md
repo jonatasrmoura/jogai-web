@@ -20,7 +20,7 @@ Este repositório contém a interface web do projeto, desenvolvida com **Next.js
 src/
 ├─ app/
 │ ├─ (public)/ # Páginas públicas: landing, login, registro
-│ │ ├─ / # Inicio
+│ │ ├─ / home # Inicio
 │ │ ├─ sign-in/ # Login
 │ │ ├─ register/ # Cadastro de novo usuário
 │ ├─ (private)/ # Páginas autenticadas: dashboard, games, profile
