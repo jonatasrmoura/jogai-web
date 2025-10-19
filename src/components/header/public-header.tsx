@@ -35,13 +35,19 @@ export function PublicHeader() {
         {/* Ações */}
         <div className="flex items-center gap-3">
           <Link
-            href="/login"
+            href={{
+              pathname: "/login",
+              query: { name: "sign-in" },
+            }}
             className="bg-gray-200 rounded-md px-4 py-2 text-sm font-medium text-gray-700 hover:text-primary"
           >
             Login
           </Link>
           <Link
-            href="/register"
+            href={{
+              pathname: "/login",
+              query: { name: "sign-up" },
+            }}
             className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-secondary transition-opacity hover:opacity-85"
           >
             Register

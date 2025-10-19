@@ -2,13 +2,12 @@ import { MiddlewareConfig, NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
 const publicRoutes = [
-  { path: "/sign-in", whenAuthenticated: "redirect" },
-  { path: "/register", whenAuthenticated: "redirect" },
+  { path: "/login", whenAuthenticated: "redirect" },
   { path: "/home", whenAuthenticated: "redirect" },
   { path: "/pricing", whenAuthenticated: "next" },
 ] as const;
 
-const REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE = "/sign-in";
+const REDIRECT_WHEN_NOT_AUTHENTICATED_ROUTE = "/login";
 
 export async function middleware(request: NextRequest) {
   const path = request.nextUrl.pathname;

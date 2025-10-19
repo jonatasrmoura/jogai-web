@@ -55,7 +55,7 @@ export async function api<T>(
     }
 
     return (await response.json()) as T;
-  } catch (e: any) {
+  } catch (e) {
     console.error("Erro na requisição: " + e);
     return false;
   }
