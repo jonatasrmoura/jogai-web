@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { SignInForm } from "../../../components/forms/sign-in-form";
+import { RegisterForm } from "../../../components/forms/sign-up-form";
+import { SignUpSchema } from "../../../components/forms/sign-up-form/sign-up-schema";
 // import { api } from "../../../services/api";
 
 interface LoginPageProps {
@@ -30,6 +32,14 @@ export default async function SignInPage({ searchParams }: LoginPageProps) {
 
     // return response.accessToken;
     return "mocked-access-token";
+  }
+
+  async function signUpAuth(
+    signUpSchema: SignUpSchema
+  ): Promise<string | null> {
+    "use server";
+    console.log(signUpSchema);
+    return JSON.stringify(signUpSchema, null, 2);
   }
 
   return (
@@ -72,9 +82,19 @@ export default async function SignInPage({ searchParams }: LoginPageProps) {
 
           <div className="mt-8">
             {currentUrl === "sign-up" ? (
-              <div>Sign Up Form Placeholder</div>
+              <div className="grid grid-cols-1 gap-6">
+                <h2 className="font-bold text-2xl text-primary">
+                  Crie sua conta
+                </h2>
+                <RegisterForm onSignUpAuth={signUpAuth} />
+              </div>
             ) : (
-              <SignInForm onSignInAuth={signInAuth} />
+              <div className="grid grid-cols-1 gap-6">
+                <h2 className="font-bold text-2xl text-primary">
+                  Entre na sua conta
+                </h2>
+                <SignInForm onSignInAuth={signInAuth} />
+              </div>
             )}
           </div>
         </main>
