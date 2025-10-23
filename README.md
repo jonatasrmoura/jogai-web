@@ -21,8 +21,7 @@ src/
 ├─ app/
 │ ├─ (public)/ # Páginas públicas: landing, login, registro
 │ │ ├─ / home # Inicio
-│ │ ├─ sign-in/ # Login
-│ │ ├─ register/ # Cadastro de novo usuário
+│ │ ├─ login/ # Login e Cadastro de novo usuário
 │ ├─ (private)/ # Páginas autenticadas: dashboard, games, profile
 │ │ ├─ dashboard/
 │ │ ├─ games/
