@@ -15,10 +15,19 @@ Cada seção contém detalhes sobre o funcionamento, arquitetura e escopo do sis
 
 ## 🧠 Tecnologias Principais
 - **Frontend:** Next.js 14 (App Router), TailwindCSS, Framer Motion  
-- **Backend:** NestJS, TypeORM  
+- **Backend:** Node.js,   Fastify, Drizzle ORM, Zod e Docker.
 - **Banco de Dados:** MySQL ou PostgreSQL  
 - **Autenticação:** JWT  
-- **Design:** Galileo AI  
+- **Design:** Galileo AI
+
+---
+
+- **Node.js:** com TypeScript nativo (experimental strip types)
+- **Fastify:** - Framework web rápido e eficiente
+- **PostgreSQL:** com extensão pgvector para vetores
+- **Drizzle ORM:** Type-safe database operations
+- **Zod:** Schema validation
+- **Docker:** Containerização do banco de dados
 
 ---
 
