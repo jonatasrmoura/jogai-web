@@ -10,7 +10,8 @@ interface LoginPageProps {
 
 export default async function SignInPage({ searchParams }: LoginPageProps) {
   const params = await searchParams;
-  const currentUrl = params.name;
+  const currentUrl = params.name as "sign-up" | "sign-in" | undefined;
+  const defaultUrl = !currentUrl ? "sign-in" : currentUrl;
 
   async function signInAuth(
     email: string,
@@ -58,7 +59,7 @@ export default async function SignInPage({ searchParams }: LoginPageProps) {
                 query: { name: "sign-in" },
               }}
               className={`w-full font-semibold py-3 rounded-l-lg ${
-                currentUrl === "sign-in"
+                defaultUrl === "sign-in"
                   ? "text-primary border-b-2 border-primary"
                   : "text-neutral-500 border-b border-primary/30 transition-all hover:opacity-85"
               }`}
@@ -71,7 +72,7 @@ export default async function SignInPage({ searchParams }: LoginPageProps) {
                 query: { name: "sign-up" },
               }}
               className={`w-full font-semibold py-3 rounded-r-lg ${
-                currentUrl === "sign-up"
+                defaultUrl === "sign-up"
                   ? "text-primary border-b-2 border-primary"
                   : "text-neutral-500 border-b border-primary/30 transition-all hover:opacity-85"
               }`}
@@ -81,7 +82,7 @@ export default async function SignInPage({ searchParams }: LoginPageProps) {
           </div>
 
           <div className="mt-8">
-            {currentUrl === "sign-up" ? (
+            {defaultUrl === "sign-up" ? (
               <div className="grid grid-cols-1 gap-6">
                 <h2 className="font-bold text-2xl text-primary">
                   Crie sua conta
