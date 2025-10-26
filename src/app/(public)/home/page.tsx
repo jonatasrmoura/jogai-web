@@ -4,7 +4,7 @@ import { Button } from "../../../components/ui/button";
 export default function HomePage() {
   return (
     <section className="h-screen container mx-auto px-6 py-20 md:py-32">
-      <div className="grid md:grid-cols-2 gap-16 items-center">
+      <div className="grid md:grid-cols-2 gap-4 lg:gap-16 items-center">
         <div className="flex flex-col gap-8 text-center md:text-left">
           <h2 className="text-4xl md:text-6xl font-extrabold !leading-tight tracking-tighter">
             <span className="text-primary">Trade</span>
