@@ -40,7 +40,7 @@ export function SignInForm({ onSignInAuth }: LoginFormProps) {
 
     setAccessTokenCookies(accessToken);
 
-    router.push("/");
+    router.push("/dashboard");
   }
 
   return (

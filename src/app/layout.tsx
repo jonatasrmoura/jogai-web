@@ -32,7 +32,7 @@ export default function RootLayout({
     <html lang="pt-BR" suppressHydrationWarning>
       <body className={`${roboto.variable} ${robotoMono.variable} antialiased`}>
         {isAuthenticated ? <PrivateHeader /> : <PublicHeader />}
-        <main className="py-10">{children}</main>
+        <main className="py-10 px-5">{children}</main>
         <Footer />
       </body>
     </html>

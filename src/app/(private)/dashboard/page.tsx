@@ -1,0 +1,44 @@
+import { Plus } from "lucide-react";
+
+import { Button } from "../../../components/ui/button";
+import { LandingNavigation } from "../../../components/navigations/landing-navigation";
+
+interface LoginPageProps {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}
+
+export default async function DashboardPage({ searchParams }: LoginPageProps) {
+  const params = await searchParams;
+  const currentUrl = params.name as
+    | "my-games"
+    | "explore"
+    | "my-deals"
+    | "wishlist"
+    | undefined;
+
+  const defaultUrl = !currentUrl ? "my-games" : currentUrl;
+
+  return (
+    <main>
+      <div className="flex flex-col justify-between items-center gap-6 md:flex-row md:items-center">
+        <div className="space-y-1">
+          <h1 className="text-3xl font-bold">Welcome back, Jonatas</h1>
+          <p className="text-neutral-500">
+            Here`s what`s happening in your gaming world.
+          </p>
+        </div>
+
+        <div>
+          <Button>
+            <Plus />
+            Add new Game
+          </Button>
+        </div>
+      </div>
+
+      <div className="border-b border-neutral-300">
+        <LandingNavigation defaultUrl={defaultUrl} />
+      </div>
+    </main>
+  );
+}
