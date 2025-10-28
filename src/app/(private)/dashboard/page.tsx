@@ -2,7 +2,7 @@ import { Plus } from "lucide-react";
 
 import { Button } from "../../../components/ui/button";
 import { LandingNavigation } from "../../../components/navigations/landing-navigation";
-import { GameCard, GameCardProps } from "../../../components/cards/game-card";
+import { GameCard } from "../../../components/cards/game-card";
 import { games } from "./games";
 
 interface LoginPageProps {

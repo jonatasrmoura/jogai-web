@@ -3,7 +3,7 @@ import { cookies } from "next/headers";
 
 const publicRoutes = [
   { path: "/login", whenAuthenticated: "redirect" },
-  { path: "/home", whenAuthenticated: "redirect" },
+  { path: "/home", whenAuthenticated: "next" },
   { path: "/pricing", whenAuthenticated: "next" },
 ] as const;
 
@@ -31,7 +31,7 @@ export async function middleware(request: NextRequest) {
     publicRoute.whenAuthenticated === "redirect"
   ) {
     const redirectUrl = request.nextUrl.clone();
-    redirectUrl.pathname = "/"; // Dashboard
+    redirectUrl.pathname = "/"; // Poderia ser apenas "/"
     return NextResponse.redirect(redirectUrl);
   }
 

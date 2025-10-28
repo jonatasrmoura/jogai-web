@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export function JogaiIcon() {
   return (
-    <Link href="/home">
+    <Link href="/">
       <div className="flex items-center gap-2">
         <div className="w-8 h-8 text-primary">
           <svg

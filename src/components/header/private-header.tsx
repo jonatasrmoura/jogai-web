@@ -24,20 +24,20 @@ export function PrivateHeader() {
 
         {/* Navegação interna */}
         <nav className="hidden gap-6 md:flex">
-          <Link href="/home" className="text-gray-700 hover:text-primary">
+          <Link href="/" className="text-gray-700 hover:text-primary">
             Home
           </Link>
-          <Link href="/search" className="text-gray-700 hover:text-primary">
-            Search
-          </Link>
           <Link
-            href="/my-games"
+            href="/dashboard?my-games"
             className="text-gray-700 hover:text-primary"
           >
             My Games
           </Link>
-          <Link href="/profile" className="text-gray-700 hover:text-primary">
-            Profile
+          <Link href="/players" className="text-gray-700 hover:text-primary">
+            Players
+          </Link>
+          <Link href="/community" className="text-gray-700 hover:text-primary">
+            Community
           </Link>
         </nav>
 
@@ -49,15 +49,18 @@ export function PrivateHeader() {
           </button>
 
           <div className="relative">
-            <button className="flex items-center gap-2 rounded-full border p-1.5 hover:bg-gray-50">
+            <Link
+              href="/dashboard?my-games"
+              className="flex items-center gap-2 rounded-full border border-primary hover:bg-gray-50"
+            >
               <Image
-                src="/avatar-placeholder.png"
-                alt="User avatar"
-                className="h-8 w-8 rounded-full object-cover"
-                width={250}
-                height={250}
+                src="https://avatars.githubusercontent.com/u/66448546?v=4"
+                alt="Jonatas Rosa Moura"
+                className="h-12 w-12 rounded-full object-cover"
+                width={500}
+                height={500}
               />
-            </button>
+            </Link>
 
             {/* Dropdown simulando menu */}
             <div className="absolute right-0 mt-2 hidden w-40 rounded-md border bg-secondary shadow-md group-hover:block">
