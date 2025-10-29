@@ -28,10 +28,13 @@ export function PrivateHeader() {
             Home
           </Link>
           <Link
-            href="/dashboard?my-games"
+            href={{
+              pathname: "/dashboard",
+              query: { name: "explore" },
+            }}
             className="text-gray-700 hover:text-primary"
           >
-            My Games
+            Explore
           </Link>
           <Link href="/players" className="text-gray-700 hover:text-primary">
             Players

@@ -1,0 +1,127 @@
+[33mcommit b63cfebcbac340e8c6845ebcb2d86745f335942b[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mdashboard-private[m[33m, [m[1;31morigin/dashboard-private[m[33m)[m
+Author: Jonatas Rosa Moura <jonatas.rmoura@outlook.com>
+Date:   Wed Oct 29 16:46:21 2025 -0300
+
+    feat: list my wishlist in dashboard page
+
+[33mcommit 3650122e0ddfebcd481fcd98afa754974f2a03ae[m[33m ([m[1;31morigin/main[m[33m)[m
+Author: Jonatas Rosa Moura <jonatas.rmoura@outlook.com>
+Date:   Tue Oct 28 22:34:05 2025 -0300
+
+    feat: dashboard explore games
+
+[33mcommit e5037dd03ee13593d8b6f20712a775840e355752[m
+Author: Jonatas Rosa Moura <jonatas.rmoura@outlook.com>
+Date:   Mon Oct 27 21:37:58 2025 -0300
+
+    feat: navigations dashboard and home
+
+[33mcommit ab79185b948c8a0262392ab019b0b4d68f8b8377[m
+Author: Jonatas Rosa Moura <jonatas.rmoura@outlook.com>
+Date:   Mon Oct 27 21:08:21 2025 -0300
+
+    feat: list my games - GameCard Component
+
+[33mcommit 91e30f2a21d9f0b4bd576840d634f53acfcbddc7[m
+Author: Jonatas Rosa Moura <jonatas.rmoura@outlook.com>
+Date:   Sun Oct 26 21:43:46 2025 -0300
+
+    feat: dashboard navigation
+
+[33mcommit 2370b2f7ef6832a61212c3569d9ff4a39abb6a4b[m[33m ([m[1;31morigin/dev[m[33m, [m[1;32mdev[m[33m)[m
+Author: Jonatas Rosa Moura <jonatas.rmoura@outlook.com>
+Date:   Sun Oct 26 20:59:32 2025 -0300
+
+    feat: public - home
+
+[33mcommit 69563203720381ee09f359faad9e75f38a5b15e0[m
+Author: Jonatas Rosa Moura <jonatas.rmoura@outlook.com>
+Date:   Thu Oct 23 20:12:09 2025 -0300
+
+    feat: readme root
+
+[33mcommit e6b0efd204c6027ffab8e7c71e09f7dc52a09cb6[m
+Author: Jonatas Rosa Moura <jonatas.rmoura@outlook.com>
+Date:   Thu Oct 23 19:18:45 2025 -0300
+
+    Revise backend technologies and add descriptions
+    
+    Updated backend technologies and added descriptions for Node.js, Fastify, PostgreSQL, Drizzle ORM, Zod, and Docker.
+
+[33mcommit 001ea2c077b66e0ca7e7eaf8d0a3b177d4d5c349[m
+Author: Jonatas Rosa Moura <jonatas.rmoura@outlook.com>
+Date:   Thu Oct 23 19:13:24 2025 -0300
+
+    feat: docs - DR-  RF - RNF - UC
+
+[33mcommit ae2431f6c3972c91a4b8876ccf7de394d72918de[m
+Author: Jonatas Rosa Moura <jonatas.rmoura@outlook.com>
+Date:   Sun Oct 19 22:41:30 2025 -0300
+
+    feat: form register a new user
+
+[33mcommit 65681251693eb968d6294393800cef04aab89c19[m
+Author: Jonatas Rosa Moura <jonatas.rmoura@outlook.com>
+Date:   Sun Oct 19 18:34:58 2025 -0300
+
+    fix: apps middleware
+
+[33mcommit 7d930a0315ff9f6b05dc07766a1fc103711b3c62[m
+Author: Jonatas Rosa Moura <jonatas.rmoura@outlook.com>
+Date:   Sun Oct 19 18:11:51 2025 -0300
+
+    feat: effect on page login for singin and singup
+
+[33mcommit 27bdbb8889e55407576b2d5c80088133ce139e52[m
+Author: Jonatas Rosa Moura <jonatas.rmoura@outlook.com>
+Date:   Sun Oct 19 17:22:26 2025 -0300
+
+    feat: interface signIn
+
+[33mcommit fd7ffc95461e1af56e809aa4b70220f12dac88f3[m[33m ([m[1;32mmain[m[33m)[m
+Author: Jonatas Rosa Moura <jonatas.rmoura@outlook.com>
+Date:   Wed Oct 8 21:33:41 2025 -0300
+
+    feat: header private
+
+[33mcommit cfbe720bc84e2eb581ce09750d989161e1168e17[m
+Author: Jonatas Rosa Moura <jonatas.rmoura@outlook.com>
+Date:   Wed Oct 8 21:29:59 2025 -0300
+
+    feat: init home page public
+
+[33mcommit dbce663ce97a8fafdd27620cbc7157d6c35fc1b0[m
+Author: Jonatas Rosa Moura <jonatas.rmoura@outlook.com>
+Date:   Tue Oct 7 22:52:03 2025 -0300
+
+    feat: readme
+
+[33mcommit 6df4a4cb02198f027c987ce764133e76331f3379[m
+Author: Jonatas Rosa Moura <jonatas.rmoura@outlook.com>
+Date:   Tue Oct 7 22:41:16 2025 -0300
+
+    first commit
+
+[33mcommit 150c3b18ca084eeae36afd33d2ad77d85957281c[m[33m ([m[1;31mupstream/master[m[33m)[m
+Author: Jonatas Rosa Moura <jonatas.rmoura@outlook.com>
+Date:   Tue Oct 7 22:24:39 2025 -0300
+
+    feat: tailwind config
+
+[33mcommit 22419a8c2818f94686c16b06fff169bfb04f31df[m
+Author: Jonatas Rosa Moura <jonatas.rmoura@outlook.com>
+Date:   Tue Oct 7 19:58:22 2025 -0300
+
+    feat: readme.md
+
+[33mcommit ce0a605c24f3816d8296a5c9bd840e221e1eb1ea[m
+Author: Jonatas Rosa Moura <jonatas.rmoura@outlook.com>
+Date:   Tue Oct 7 19:41:40 2025 -0300
+
+    feat: init app
+
+[33mcommit dd95566b3242310c2c0fa5520639ee6d4711c705[m
+Author: Jonatas Rosa Moura <jonatas.rmoura@outlook.com>
+Date:   Tue Oct 7 19:21:07 2025 -0300
+
+    Initial commit from Create Next App

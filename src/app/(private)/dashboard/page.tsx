@@ -4,10 +4,12 @@ import { GameExploreCard } from "../../../components/cards/game-explore-card";
 import { Button } from "../../../components/ui/button";
 import { LandingNavigation } from "../../../components/navigations/landing-navigation";
 import { GameCard } from "../../../components/cards/game-card";
+import { MyGameDealCard } from "../../../components/cards/my-game-deal-card";
 
 import { myGamesMock } from "./mocks/my-games-mock";
 import { GamesExploreMock } from "./mocks/games-explore-mock";
 import { myWishlistGames } from "./mocks/my-wishlist-games";
+import { myGamesDealsMock } from "./mocks/my-games-deals-mock";
 
 interface LoginPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -59,15 +61,25 @@ export default async function DashboardPage({ searchParams }: LoginPageProps) {
           ))}
         </div>
       ) : defaultUrl === "explore" ? (
-        <div className="grid grid-cols-1 gap-x-2 md:grid-cols-4 md:gap-x-4 lg:grid-cols-5">
+        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6 p-6 max-w-7xl mx-auto">
           {GamesExploreMock.map((game) => (
             <GameExploreCard key={game.title} {...game} />
           ))}
         </div>
       ) : defaultUrl === "my-deals" ? (
-        <p className="text-center mt-5 text-lg font-semibold">
-          You don`t have business
-        </p>
+        <>
+          {!myGamesDealsMock.length ? (
+            <p className="text-center mt-5 text-lg font-semibold">
+              You don`t have business
+            </p>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6 p-6 max-w-7xl mx-auto">
+              {myGamesDealsMock.map((game) => (
+                <MyGameDealCard key={game.title} {...game} />
+              ))}
+            </div>
+          )}
+        </>
       ) : defaultUrl === "wishlist" ? (
         <>
           {!myWishlistGames.length ? (
@@ -75,7 +87,7 @@ export default async function DashboardPage({ searchParams }: LoginPageProps) {
               Empty wishlist
             </p>
           ) : (
-            <div className="grid grid-cols-1 gap-x-2 md:grid-cols-4 md:gap-x-4 lg:grid-cols-5">
+            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6 p-6 max-w-7xl mx-auto">
               {myWishlistGames.map((game) => (
                 <GameExploreCard key={game.title} {...game} />
               ))}

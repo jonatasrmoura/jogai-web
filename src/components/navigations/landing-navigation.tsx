@@ -10,19 +10,6 @@ export function LandingNavigation({ defaultUrl }: LandingNavigationProps) {
       <Link
         href={{
           pathname: "/dashboard",
-          query: { name: "my-games" },
-        }}
-        className={`w-full font-semibold py-3 ${
-          defaultUrl === "my-games"
-            ? "text-primary border-b-2 border-primary"
-            : "text-neutral-500 border-b border-primary/30 transition-all hover:opacity-85"
-        }`}
-      >
-        My Games
-      </Link>
-      <Link
-        href={{
-          pathname: "/dashboard",
           query: { name: "explore" },
         }}
         className={`w-full font-semibold py-3 ${
@@ -36,19 +23,6 @@ export function LandingNavigation({ defaultUrl }: LandingNavigationProps) {
       <Link
         href={{
           pathname: "/dashboard",
-          query: { name: "my-deals" },
-        }}
-        className={`w-full font-semibold py-3 ${
-          defaultUrl === "my-deals"
-            ? "text-primary border-b-2 border-primary"
-            : "text-neutral-500 border-b border-primary/30 transition-all hover:opacity-85"
-        }`}
-      >
-        My Deals
-      </Link>
-      <Link
-        href={{
-          pathname: "/dashboard",
           query: { name: "wishlist" },
         }}
         className={`w-full font-semibold py-3 ${
@@ -58,6 +32,32 @@ export function LandingNavigation({ defaultUrl }: LandingNavigationProps) {
         }`}
       >
         My Wishlist
+      </Link>
+      <Link
+        href={{
+          pathname: "/dashboard",
+          query: { name: "my-games" },
+        }}
+        className={`w-full font-semibold py-3 ${
+          defaultUrl === "my-games"
+            ? "text-primary border-b-2 border-primary"
+            : "text-neutral-500 border-b border-primary/30 transition-all hover:opacity-85"
+        }`}
+      >
+        My Games
+      </Link>
+      <Link
+        href={{
+          pathname: "/dashboard",
+          query: { name: "my-deals" },
+        }}
+        className={`w-full font-semibold py-3 ${
+          defaultUrl === "my-deals"
+            ? "text-primary border-b-2 border-primary"
+            : "text-neutral-500 border-b border-primary/30 transition-all hover:opacity-85"
+        }`}
+      >
+        My Deals
       </Link>
     </nav>
   );

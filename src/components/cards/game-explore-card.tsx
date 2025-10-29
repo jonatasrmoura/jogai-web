@@ -6,6 +6,7 @@ import { Heart } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
+import Link from "next/link";
 
 interface GameExploreCardProps {
   title: string;
@@ -35,44 +36,48 @@ export function GameExploreCard(props: GameExploreCardProps) {
       : "Sell";
 
   return (
-    <Card className="md:max-w-[250px] border-0 bg-transparent ">
-      <div className="relative w-full h-[370px] rounded-xl overflow-hidden shadow-md">
-        <Image
-          src={gameExplore.image}
-          alt={gameExplore.title}
-          fill
-          className="object-cover"
-        />
-
-        {/* Botão de favoritar */}
-        <Button
-          onClick={handleFavorite}
-          className={`absolute top-2 right-2 ${
-            gameExplore.isFavorite ? "bg-primary" : "bg-white"
-          } rounded-full p-[6px] shadow-md hover:scale-105 transition`}
-        >
-          <Heart
-            size={18}
-            className={`${
-              gameExplore.isFavorite ? "text-white" : "text-gray-500"
-            }`}
+    <Card className="md:max-w-[250px] border-0 bg-transparent group transition-all duration-300 hover:scale-[1.03]">
+      <Link href="#">
+        <div className="relative w-full h-[370px] rounded-xl overflow-hidden shadow-md">
+          <Image
+            src={gameExplore.image}
+            alt={gameExplore.title}
+            fill
+            className="object-cover"
           />
-        </Button>
 
-        {/* Barra roxa inferior */}
-        <div className="absolute bottom-0 left-0 w-full bg-primary text-white text-sm font-semibold px-3 py-1 flex items-center justify-center">
-          {typeLabel}
+          {/* Botão de favoritar */}
+          <Button
+            onClick={handleFavorite}
+            className={`absolute top-2 right-2 ${
+              gameExplore.isFavorite ? "bg-primary" : "bg-white"
+            } rounded-full p-[6px] shadow-md hover:scale-105 transition`}
+          >
+            <Heart
+              size={18}
+              className={`${
+                gameExplore.isFavorite ? "text-white" : "text-gray-500"
+              }`}
+            />
+          </Button>
+
+          {/* Barra roxa inferior */}
+          <div className="absolute bottom-0 left-0 w-full bg-primary text-white text-sm font-semibold px-3 py-1 flex items-center justify-center">
+            {typeLabel}
+          </div>
         </div>
-      </div>
 
-      {/* Texto abaixo */}
-      <div className="mt-2 text-[14px] font-semibold truncate">
-        {gameExplore.title}
-      </div>
-      <div className="text-[13px] text-gray-500">
-        <p>{gameExplore.platform}</p>
-        <p>{gameExplore.city}, {gameExplore.state}</p>
-      </div>
+        {/* Texto abaixo */}
+        <div className="mt-2 text-[14px] font-semibold truncate">
+          {gameExplore.title}
+        </div>
+        <div className="text-[13px] text-gray-500">
+          <p>{gameExplore.platform}</p>
+          <p>
+            {gameExplore.city}, {gameExplore.state}
+          </p>
+        </div>
+      </Link>
     </Card>
   );
 }
