@@ -4,6 +4,8 @@ import { Button } from "../../../components/ui/button";
 import { LandingNavigation } from "../../../components/navigations/landing-navigation";
 import { GameCard } from "../../../components/cards/game-card";
 import { games } from "./games";
+import { GameExploreCard } from "../../../components/cards/game-explore-card";
+import { MOCK_GAMES } from "./mocks/mock-games-explore";
 
 interface LoginPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -55,11 +57,17 @@ export default async function DashboardPage({ searchParams }: LoginPageProps) {
           ))}
         </div>
       ) : defaultUrl === "explore" ? (
-        <p>Explore</p>
+        <div className="grid grid-cols-2 gap-x-2 md:grid-cols-4 md:gap-x-4 lg:grid-cols-5">
+          {MOCK_GAMES.map((game) => (
+            <GameExploreCard key={game.title} {...game} />
+          ))}
+        </div>
       ) : defaultUrl === "my-deals" ? (
-        <p>My Deals</p>
+        <p className="text-center mt-5 text-lg font-semibold">
+          You don`t have business
+        </p>
       ) : defaultUrl === "wishlist" ? (
-        <p>Wishlist</p>
+        <p className="text-center mt-5 text-lg font-semibold">Empty wishlist</p>
       ) : null}
     </main>
   );
