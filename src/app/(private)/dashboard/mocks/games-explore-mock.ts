@@ -1,4 +1,4 @@
-export const GamesExploreMock: GameExplore[] = [
+export const gamesExploreMock: GameExplore[] = [
   {
     isFavorite: true,
     title: "The Last of Us Part II",

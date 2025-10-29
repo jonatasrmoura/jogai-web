@@ -6,9 +6,9 @@ import { LandingNavigation } from "../../../components/navigations/landing-navig
 import { GameCard } from "../../../components/cards/game-card";
 import { MyGameDealCard } from "../../../components/cards/my-game-deal-card";
 
-import { myGamesMock } from "./mocks/my-games-mock";
-import { GamesExploreMock } from "./mocks/games-explore-mock";
+import { gamesExploreMock } from "./mocks/games-explore-mock";
 import { myWishlistGames } from "./mocks/my-wishlist-games";
+import { myGamesMock } from "./mocks/my-games-mock";
 import { myGamesDealsMock } from "./mocks/my-games-deals-mock";
 
 interface LoginPageProps {
@@ -49,28 +49,44 @@ export default async function DashboardPage({ searchParams }: LoginPageProps) {
       </div>
 
       {defaultUrl === "my-games" ? (
-        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6 p-6 max-w-7xl mx-auto">
-          {myGamesMock.map((game, i) => (
-            <GameCard
-              key={i}
-              imageUrl={game.imageUrl}
-              title={game.title}
-              platform={game.platform}
-              status={game.status}
-            />
-          ))}
-        </div>
+        <>
+          {!myGamesMock.length ? (
+            <p className="text-center mt-5 text-lg font-semibold">
+              Nenhum jogo negociado.
+            </p>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6 p-6 max-w-7xl mx-auto">
+              {myGamesMock.map((game) => (
+                <GameCard
+                  key={game.title}
+                  imageUrl={game.imageUrl}
+                  title={game.title}
+                  platform={game.platform}
+                  status={game.status}
+                />
+              ))}
+            </div>
+          )}
+        </>
       ) : defaultUrl === "explore" ? (
-        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6 p-6 max-w-7xl mx-auto">
-          {GamesExploreMock.map((game) => (
-            <GameExploreCard key={game.title} {...game} />
-          ))}
-        </div>
+        <>
+          {!gamesExploreMock.length ? (
+            <p className="text-center mt-5 text-lg font-semibold">
+              Nenhum jogo encontrado.
+            </p>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6 p-6 max-w-7xl mx-auto">
+              {gamesExploreMock.map((game) => (
+                <GameExploreCard key={game.title} {...game} />
+              ))}
+            </div>
+          )}
+        </>
       ) : defaultUrl === "my-deals" ? (
         <>
           {!myGamesDealsMock.length ? (
             <p className="text-center mt-5 text-lg font-semibold">
-              You don`t have business
+              Você não possui negociações.
             </p>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6 p-6 max-w-7xl mx-auto">
@@ -84,7 +100,7 @@ export default async function DashboardPage({ searchParams }: LoginPageProps) {
         <>
           {!myWishlistGames.length ? (
             <p className="text-center mt-5 text-lg font-semibold">
-              Empty wishlist
+              Nenhum jogo favoritado.
             </p>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6 p-6 max-w-7xl mx-auto">

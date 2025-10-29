@@ -1,5 +1,5 @@
-import { GamesExploreMock } from "./games-explore-mock";
+import { gamesExploreMock } from "./games-explore-mock";
 
-export const myWishlistGames: GameExplore[] = GamesExploreMock.filter(
+export const myWishlistGames: GameExplore[] = gamesExploreMock.filter(
   (game) => game.isFavorite
 );
