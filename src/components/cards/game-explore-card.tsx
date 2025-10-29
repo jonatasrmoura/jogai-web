@@ -7,51 +7,36 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
 
-export interface GameExploreCardProps {
+interface GameExploreCardProps {
   title: string;
   city: string;
   state: string;
   price?: string;
   image: string;
-  type: "trade" | "sell" | "lend";
+  type: GameType;
   isFavorite: boolean;
+  platform: string;
 }
 
-export function GameExploreCard({
-  title,
-  city,
-  state,
-  price,
-  image,
-  type,
-  isFavorite,
-}: GameExploreCardProps) {
-  const [gameExplore, setGameExplore] = useState<GameExploreCardProps>({
-    title,
-    city,
-    state,
-    price,
-    image,
-    type,
-    isFavorite,
-  });
+export function GameExploreCard(props: GameExploreCardProps) {
+  const [gameExplore, setGameExplore] = useState<GameExploreCardProps>(props);
 
   const handleFavorite = () => {
     setGameExplore((prev) => ({ ...prev, isFavorite: !prev.isFavorite }));
   };
 
   const typeLabel =
-    gameExplore.type === "trade"
+    gameExplore.type === "Trade"
       ? "Trade"
-      : gameExplore.type === "lend"
+      : gameExplore.type === "Lend"
       ? "Lend"
       : gameExplore.price
       ? `R$ ${gameExplore.price}`
       : "Sell";
 
   return (
-    <Card className="border-0 bg-transparent ">
-      <div className="relative w-full h-[220px] rounded-xl overflow-hidden shadow-md">
+    <Card className="md:max-w-[250px] border-0 bg-transparent ">
+      <div className="relative w-full h-[370px] rounded-xl overflow-hidden shadow-md">
         <Image
           src={gameExplore.image}
           alt={gameExplore.title}
@@ -85,7 +70,8 @@ export function GameExploreCard({
         {gameExplore.title}
       </div>
       <div className="text-[13px] text-gray-500">
-        {gameExplore.city}, {gameExplore.state}
+        <p>{gameExplore.platform}</p>
+        <p>{gameExplore.city}, {gameExplore.state}</p>
       </div>
     </Card>
   );

@@ -1,11 +1,13 @@
 import { Plus } from "lucide-react";
 
+import { GameExploreCard } from "../../../components/cards/game-explore-card";
 import { Button } from "../../../components/ui/button";
 import { LandingNavigation } from "../../../components/navigations/landing-navigation";
 import { GameCard } from "../../../components/cards/game-card";
-import { games } from "./games";
-import { GameExploreCard } from "../../../components/cards/game-explore-card";
-import { MOCK_GAMES } from "./mocks/mock-games-explore";
+
+import { myGamesMock } from "./mocks/my-games-mock";
+import { GamesExploreMock } from "./mocks/games-explore-mock";
+import { myWishlistGames } from "./mocks/my-wishlist-games";
 
 interface LoginPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -46,7 +48,7 @@ export default async function DashboardPage({ searchParams }: LoginPageProps) {
 
       {defaultUrl === "my-games" ? (
         <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6 p-6 max-w-7xl mx-auto">
-          {games.map((game, i) => (
+          {myGamesMock.map((game, i) => (
             <GameCard
               key={i}
               imageUrl={game.imageUrl}
@@ -57,8 +59,8 @@ export default async function DashboardPage({ searchParams }: LoginPageProps) {
           ))}
         </div>
       ) : defaultUrl === "explore" ? (
-        <div className="grid grid-cols-2 gap-x-2 md:grid-cols-4 md:gap-x-4 lg:grid-cols-5">
-          {MOCK_GAMES.map((game) => (
+        <div className="grid grid-cols-1 gap-x-2 md:grid-cols-4 md:gap-x-4 lg:grid-cols-5">
+          {GamesExploreMock.map((game) => (
             <GameExploreCard key={game.title} {...game} />
           ))}
         </div>
@@ -67,7 +69,19 @@ export default async function DashboardPage({ searchParams }: LoginPageProps) {
           You don`t have business
         </p>
       ) : defaultUrl === "wishlist" ? (
-        <p className="text-center mt-5 text-lg font-semibold">Empty wishlist</p>
+        <>
+          {!myWishlistGames.length ? (
+            <p className="text-center mt-5 text-lg font-semibold">
+              Empty wishlist
+            </p>
+          ) : (
+            <div className="grid grid-cols-1 gap-x-2 md:grid-cols-4 md:gap-x-4 lg:grid-cols-5">
+              {myWishlistGames.map((game) => (
+                <GameExploreCard key={game.title} {...game} />
+              ))}
+            </div>
+          )}
+        </>
       ) : null}
     </main>
   );
