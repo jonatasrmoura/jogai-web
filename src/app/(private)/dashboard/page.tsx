@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { Plus } from "lucide-react";
 
 import { GameExploreCard } from "../../../components/cards/game-explore-card";
@@ -36,12 +37,12 @@ export default async function DashboardPage({ searchParams }: LoginPageProps) {
           </p>
         </div>
 
-        <div>
+        <Link href="/game-details">
           <Button>
             <Plus />
             Add new Game
           </Button>
-        </div>
+        </Link>
       </div>
 
       <div className="border-b border-neutral-300 overflow-x-scroll w-full mt-2">

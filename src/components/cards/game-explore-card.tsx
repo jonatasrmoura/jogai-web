@@ -37,7 +37,7 @@ export function GameExploreCard(props: GameExploreCardProps) {
 
   return (
     <Card className="md:max-w-[250px] border-0 bg-transparent group transition-all duration-300 hover:scale-[1.03]">
-      <Link href="#">
+      <Link href="/game-details">
         <div className="relative w-full h-[370px] rounded-xl overflow-hidden shadow-md">
           <Image
             src={gameExplore.image}

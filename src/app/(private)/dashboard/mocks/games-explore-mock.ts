@@ -61,7 +61,7 @@ export const gamesExploreMock: GameExplore[] = [
     image:
       "https://i.pinimg.com/736x/47/ed/15/47ed15a815ac011fa2b4f27470f12f36.jpg",
     type: "Sell",
-    price: "100,00",
+    price: "199,99",
     platform: "PlayStation 5",
   },
   {
