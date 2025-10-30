@@ -37,7 +37,7 @@ export default async function DashboardPage({ searchParams }: LoginPageProps) {
           </p>
         </div>
 
-        <Link href="/game-details">
+        <Link href="/new-game">
           <Button>
             <Plus />
             Add new Game
