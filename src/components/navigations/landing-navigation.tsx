@@ -6,7 +6,7 @@ interface LandingNavigationProps {
 
 export function LandingNavigation({ defaultUrl }: LandingNavigationProps) {
   return (
-    <nav className="w-lg pr-14 md:max-w-md flex justify-start items-center text-center">
+    <nav className="w-lg pr-10 md:max-w-md flex justify-start items-center text-center">
       <Link
         href={{
           pathname: "/dashboard",

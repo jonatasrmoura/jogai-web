@@ -10,7 +10,7 @@ import { errorMessage } from "../../../lib/messages/error-message";
 import { setAccessTokenCookies } from "../../../config/cookies/auth/set-access-token-cookies";
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
-import { FormMessage } from "../../form-message";
+import { ErrorMessageForm } from "../../forms/error-message-form";
 
 interface LoginFormProps {
   onSignInAuth: (email: string, password: string) => Promise<string | null>;
@@ -49,7 +49,7 @@ export function SignInForm({ onSignInAuth }: LoginFormProps) {
         <div className="flex flex-col items-start gap-2">
           <Input placeholder="E-mail" {...register("email")} />
           {errors?.email?.message && (
-            <FormMessage message={errors.email.message} />
+            <ErrorMessageForm message={errors.email.message} />
           )}
         </div>
         <div className="flex flex-col items-start gap-2">
@@ -59,7 +59,7 @@ export function SignInForm({ onSignInAuth }: LoginFormProps) {
             {...register("password")}
           />
           {errors?.password?.message && (
-            <FormMessage message={errors.password.message} />
+            <ErrorMessageForm message={errors.password.message} />
           )}
         </div>
       </div>

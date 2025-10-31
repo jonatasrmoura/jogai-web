@@ -9,7 +9,7 @@ import { errorMessage } from "../../../lib/messages/error-message";
 import { setAccessTokenCookies } from "../../../config/cookies/auth/set-access-token-cookies";
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
-import { FormMessage } from "../../form-message";
+import { ErrorMessageForm } from "../../forms/error-message-form";
 
 interface RegisterFormProps {
   onSignUpAuth: (data: SignUpSchema) => Promise<string | null>;
@@ -56,13 +56,13 @@ export function RegisterForm({ onSignUpAuth }: RegisterFormProps) {
         <div className="flex flex-col items-start gap-2">
           <Input placeholder="Nome completo" {...register("fullname")} />
           {errors?.fullname?.message && (
-            <FormMessage message={errors.fullname.message} />
+            <ErrorMessageForm message={errors.fullname.message} />
           )}
         </div>
         <div className="flex flex-col items-start gap-2">
           <Input placeholder="Apelido" {...register("nickname")} />
           {errors?.nickname?.message && (
-            <FormMessage message={errors.nickname.message} />
+            <ErrorMessageForm message={errors.nickname.message} />
           )}
         </div>
         <div className="flex flex-col items-start gap-2">
@@ -71,17 +71,19 @@ export function RegisterForm({ onSignUpAuth }: RegisterFormProps) {
             {...register("dateOfBirth")}
           />
           {errors?.dateOfBirth?.message && (
-            <FormMessage message={errors.dateOfBirth.message} />
+            <ErrorMessageForm message={errors.dateOfBirth.message} />
           )}
         </div>
         <div className="flex flex-col items-start gap-2">
           <Input placeholder="CPF" {...register("cpf")} />
-          {errors?.cpf?.message && <FormMessage message={errors.cpf.message} />}
+          {errors?.cpf?.message && (
+            <ErrorMessageForm message={errors.cpf.message} />
+          )}
         </div>
         <div className="flex flex-col items-start gap-2">
           <Input placeholder="E-mail" {...register("email")} />
           {errors?.email?.message && (
-            <FormMessage message={errors.email.message} />
+            <ErrorMessageForm message={errors.email.message} />
           )}
         </div>
         <div className="flex flex-col items-start gap-2">
@@ -91,7 +93,7 @@ export function RegisterForm({ onSignUpAuth }: RegisterFormProps) {
             {...register("password")}
           />
           {errors?.password?.message && (
-            <FormMessage message={errors.password.message} />
+            <ErrorMessageForm message={errors.password.message} />
           )}
         </div>
         <div className="flex flex-col items-start gap-2">
@@ -101,7 +103,7 @@ export function RegisterForm({ onSignUpAuth }: RegisterFormProps) {
             {...register("confirmPassword")}
           />
           {errors?.confirmPassword?.message && (
-            <FormMessage message={errors.confirmPassword.message} />
+            <ErrorMessageForm message={errors.confirmPassword.message} />
           )}
         </div>
       </div>

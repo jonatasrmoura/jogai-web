@@ -1,4 +1,4 @@
-export const listPlatforms: Array<{ value: string; label: string }> = [
+export const listPlatformsMock: Array<{ value: string; label: string }> = [
   {
     label: "PC",
     value: "PC",
