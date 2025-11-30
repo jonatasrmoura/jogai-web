@@ -45,7 +45,7 @@ export default async function DashboardPage({ searchParams }: LoginPageProps) {
         </Link>
       </div>
 
-      <div className="border-b border-neutral-300 overflow-x-scroll w-full mt-2">
+      <div className="border-b border-neutral-300 overflow-x-auto w-full mt-2">
         <LandingNavigation defaultUrl={defaultUrl} />
       </div>
 
