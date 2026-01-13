@@ -1,8 +1,9 @@
 import Link from "next/link";
+
 import { SignInForm } from "../../../components/forms/sign-in-form";
 import { RegisterForm } from "../../../components/forms/sign-up-form";
-import { SignUpSchema } from "../../../components/forms/sign-up-form/sign-up-schema";
-// import { api } from "../../../services/api";
+import type { SignUpSchema } from "../../../components/forms/sign-up-form/sign-up-schema";
+import { api } from "../../../services/api";
 
 interface LoginPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -18,21 +19,16 @@ export default async function SignInPage({ searchParams }: LoginPageProps) {
     password: string
   ): Promise<string | null> {
     "use server";
-    console.log({
-      email,
-      password,
+    const response = await api<{ accessToken: string }>("/auth/login", {
+      method: "POST",
+      body: JSON.stringify({ email, password }),
     });
-    // const response = await api<{ accessToken: string }>("/auth/signIn", {
-    //   method: "POST",
-    //   body: JSON.stringify({ email, password }),
-    // });
 
-    // if (!response) {
-    //   return null;
-    // }
+    if (!response) {
+      return null;
+    }
 
-    // return response.accessToken;
-    return "mocked-access-token";
+    return response.accessToken;
   }
 
   async function signUpAuth(
