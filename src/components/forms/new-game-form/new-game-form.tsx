@@ -44,7 +44,6 @@ export function NewGameForm() {
   }
 
   async function onSubmit(data: NewGameFormData) {
-    console.log(data);
     const formData = new FormData();
 
     Object.entries(data).forEach(([key, value]) => {
@@ -62,7 +61,7 @@ export function NewGameForm() {
       reset();
       setImagePreview(null);
     } catch (error) {
-      console.log(error);
+      console.error(error);
       alert("Erro ao cadastrar o jogo");
     }
   }

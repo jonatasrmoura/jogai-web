@@ -16,7 +16,7 @@ export default async function SignInPage({ searchParams }: LoginPageProps) {
 
   async function signInAuth(
     email: string,
-    password: string
+    password: string,
   ): Promise<string | null> {
     "use server";
     const response = await api<{ accessToken: string }>("/auth/login", {
@@ -32,10 +32,9 @@ export default async function SignInPage({ searchParams }: LoginPageProps) {
   }
 
   async function signUpAuth(
-    signUpSchema: SignUpSchema
+    signUpSchema: SignUpSchema,
   ): Promise<string | null> {
     "use server";
-    console.log(signUpSchema);
     return JSON.stringify(signUpSchema, null, 2);
   }
 

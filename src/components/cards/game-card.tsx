@@ -21,7 +21,7 @@ export function GameCard({ title, platform, imageUrl, status }: GameCardProps) {
   return (
     <div
       className={cn(
-        "relative w-full rounded-2xl overflow-hidden shadow-lg group transition-all duration-300 hover:scale-[1.03]"
+        "relative w-full rounded-2xl overflow-hidden shadow-lg group transition-all duration-300 hover:scale-[1.03]",
       )}
     >
       <Link href="#">
@@ -40,7 +40,7 @@ export function GameCard({ title, platform, imageUrl, status }: GameCardProps) {
           <span
             className={cn(
               "absolute top-2 right-2 text-xs font-semibold text-white px-2 py-1 rounded-lg",
-              statusColors[status]
+              statusColors[status],
             )}
           >
             {status}

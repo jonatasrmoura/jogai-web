@@ -1,5 +1,8 @@
 import { MiddlewareConfig, NextRequest, NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { jwtDecode } from "jwt-decode";
+
+import { refreshTokenService } from "./services/refresh-token.service";
 
 const publicRoutes = [
   { path: "/login", whenAuthenticated: "redirect" },
@@ -38,6 +41,10 @@ export async function middleware(request: NextRequest) {
   if (accessToken && !publicRoute) {
     // Checar se o JWT esta EXPIRADO
     // Se sim, remover o cookie e redirecionar o usuario pro login
+
+    const { refreshToken } = jwtDecode<{ refreshToken: string }>(accessToken);
+
+    await refreshTokenService({ refreshToken });
 
     return NextResponse.next();
   }

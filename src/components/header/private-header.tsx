@@ -1,18 +1,18 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { Bell } from "lucide-react";
 import { useRouter } from "next/navigation";
 
 import { JogaiIcon } from "../icons/jogai-icon";
-import Image from "next/image";
+import { logoutService } from "../../services/logout.service";
 
 export function PrivateHeader() {
   const router = useRouter();
 
-  const handleLogout = () => {
-    // Aqui você limpa o token/cookie e redireciona
-    console.log("logout...");
+  const handleLogout = async () => {
+    await logoutService();
     router.push("/login");
   };
 
@@ -66,7 +66,7 @@ export function PrivateHeader() {
             </Link>
 
             {/* Dropdown simulando menu */}
-            <div className="absolute right-0 mt-2 hidden w-40 rounded-md border bg-secondary shadow-md group-hover:block">
+            <div className="absolute right-0 mt-2 w-40 rounded-md border bg-secondary shadow-md group-hover:block">
               <button
                 onClick={handleLogout}
                 className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"

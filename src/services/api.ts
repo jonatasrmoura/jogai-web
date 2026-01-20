@@ -1,13 +1,12 @@
 "use server";
 import { cookies } from "next/headers";
 import { signOut } from "../utils/sign-out";
-import Swal from "sweetalert2";
 
 const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL as string;
 
 export async function api<T>(
   url: string,
-  options?: RequestInit
+  options?: RequestInit,
 ): Promise<T | false> {
   const cookieStore = await cookies();
   const accessToken = cookieStore.get("jogai-app.token")?.value;
@@ -37,14 +36,19 @@ export async function api<T>(
 
     if (response.status === 401) {
       console.warn(
-        "Token inválido ou expirado. Redirecionando para o login..."
+        "Token inválido ou expirado. Redirecionando para o login...",
       );
-      await Swal.fire({
-        title: "<strong>Sua sessão expirou</strong>",
-        icon: "info",
-        html: `Faça login novamente`,
-        confirmButtonText: `Ok`,
-      });
+
+      // 👇 Só importa o SweetAlert no momento do erro e apenas no navegador
+      if (typeof window !== "undefined") {
+        const Swal = (await import("sweetalert2")).default;
+        Swal.fire({
+          title: "<strong>Sua sessão expirou</strong>",
+          icon: "info",
+          html: `Faça login novamente`,
+          confirmButtonText: `Ok`,
+        });
+      }
       signOut();
       throw new Error("Sessão expirada. Faça login novamente.");
     }

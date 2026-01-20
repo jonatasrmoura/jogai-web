@@ -7,10 +7,10 @@ import { LandingNavigation } from "../../../components/navigations/landing-navig
 import { GameCard } from "../../../components/cards/game-card";
 import { MyGameDealCard } from "../../../components/cards/my-game-deal-card";
 
-import { gamesExploreMock } from "./mocks/games-explore-mock";
 import { myWishlistGames } from "./mocks/my-wishlist-games";
 import { myGamesMock } from "./mocks/my-games-mock";
 import { myGamesDealsMock } from "./mocks/my-games-deals-mock";
+import { listGamesApi } from "./api/list-games";
 
 interface LoginPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -26,6 +26,13 @@ export default async function DashboardPage({ searchParams }: LoginPageProps) {
     | undefined;
 
   const defaultUrl = !currentUrl ? "my-games" : currentUrl;
+
+  // PROSIMO PASSO: SEPARAR LISTAGEM DE JOGOS EM SEUS DEVIDOS COMPONENTES!!!
+  // E TRATAR PAGINACAO, NO CASO AQUI NESTE ARQUIVO.
+  const { data: listGamesExplore } = await listGamesApi({
+    page: 1,
+    limit: 10,
+  });
 
   return (
     <main>
@@ -71,14 +78,22 @@ export default async function DashboardPage({ searchParams }: LoginPageProps) {
         </>
       ) : defaultUrl === "explore" ? (
         <>
-          {!gamesExploreMock.length ? (
+          {!listGamesExplore.length ? (
             <p className="text-center mt-5 text-lg font-semibold">
               Nenhum jogo encontrado.
             </p>
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6 p-6 max-w-7xl mx-auto">
-              {gamesExploreMock.map((game) => (
-                <GameExploreCard key={game.title} {...game} />
+              {listGamesExplore.map((game) => (
+                <GameExploreCard
+                  key={game.uuid}
+                  gameId={game.id}
+                  isFavorite={false}
+                  image={game.images[0].url}
+                  name={game.name}
+                  platform={game.platform}
+                  value={String(game.value)}
+                />
               ))}
             </div>
           )}
@@ -106,7 +121,15 @@ export default async function DashboardPage({ searchParams }: LoginPageProps) {
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6 p-6 max-w-7xl mx-auto">
               {myWishlistGames.map((game) => (
-                <GameExploreCard key={game.title} {...game} />
+                <GameExploreCard
+                  key={game.uuid}
+                  gameId={game.id}
+                  isFavorite={false}
+                  image={game.images[0].url}
+                  name={game.name}
+                  platform={game.platform}
+                  value={String(game.value)}
+                />
               ))}
             </div>
           )}

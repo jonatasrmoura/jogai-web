@@ -9,12 +9,10 @@ import { useState } from "react";
 import Link from "next/link";
 
 interface GameExploreCardProps {
-  title: string;
-  city: string;
-  state: string;
-  price?: string;
+  gameId: number;
+  name: string;
+  value: string;
   image: string;
-  type: GameType;
   isFavorite: boolean;
   platform: string;
 }
@@ -26,14 +24,7 @@ export function GameExploreCard(props: GameExploreCardProps) {
     setGameExplore((prev) => ({ ...prev, isFavorite: !prev.isFavorite }));
   };
 
-  const typeLabel =
-    gameExplore.type === "Trade"
-      ? "Trade"
-      : gameExplore.type === "Lend"
-      ? "Lend"
-      : gameExplore.price
-      ? `R$ ${gameExplore.price}`
-      : "Sell";
+  const typeLabel = gameExplore.value ? `R$ ${gameExplore.value}` : "Sell";
 
   return (
     <Card className="md:max-w-[250px] border-0 bg-transparent group transition-all duration-300 hover:scale-[1.03]">
@@ -41,7 +32,7 @@ export function GameExploreCard(props: GameExploreCardProps) {
         <div className="relative w-full h-[370px] rounded-xl overflow-hidden shadow-md">
           <Image
             src={gameExplore.image}
-            alt={gameExplore.title}
+            alt={`${gameExplore.name}-${gameExplore.gameId}`}
             fill
             className="object-cover"
           />
@@ -69,13 +60,10 @@ export function GameExploreCard(props: GameExploreCardProps) {
 
         {/* Texto abaixo */}
         <div className="mt-2 text-[14px] font-semibold truncate">
-          {gameExplore.title}
+          {gameExplore.name}
         </div>
         <div className="text-[13px] text-gray-500">
           <p>{gameExplore.platform}</p>
-          <p>
-            {gameExplore.city}, {gameExplore.state}
-          </p>
         </div>
       </Link>
     </Card>
