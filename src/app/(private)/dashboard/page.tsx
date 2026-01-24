@@ -87,6 +87,7 @@ export default async function DashboardPage({ searchParams }: LoginPageProps) {
               {listGamesExplore.map((game) => (
                 <GameExploreCard
                   key={game.uuid}
+                  uuid={game.uuid}
                   gameId={game.id}
                   isFavorite={false}
                   image={game.images[0].url}
@@ -123,6 +124,7 @@ export default async function DashboardPage({ searchParams }: LoginPageProps) {
               {myWishlistGames.map((game) => (
                 <GameExploreCard
                   key={game.uuid}
+                  uuid={game.uuid}
                   gameId={game.id}
                   isFavorite={false}
                   image={game.images[0].url}

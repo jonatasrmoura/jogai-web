@@ -17,6 +17,8 @@ export async function refreshTokenService({
     body: JSON.stringify({ refreshToken }),
   });
 
+  console.error(responseApi);
+
   if (!responseApi) {
     throw new Error("Erro ao fazer refresh do token");
   }
