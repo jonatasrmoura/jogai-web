@@ -2,8 +2,6 @@ import Link from "next/link";
 
 import { SignInForm } from "../../../components/forms/sign-in-form";
 import { RegisterForm } from "../../../components/forms/sign-up-form";
-import type { SignUpSchema } from "../../../components/forms/sign-up-form/sign-up-schema";
-import { api } from "../../../services/api";
 
 interface LoginPageProps {
   searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
@@ -13,30 +11,6 @@ export default async function SignInPage({ searchParams }: LoginPageProps) {
   const params = await searchParams;
   const currentUrl = params.name as "sign-up" | "sign-in" | undefined;
   const defaultUrl = !currentUrl ? "sign-in" : currentUrl;
-
-  async function signInAuth(
-    email: string,
-    password: string,
-  ): Promise<string | null> {
-    "use server";
-    const response = await api<{ accessToken: string }>("/auth/login", {
-      method: "POST",
-      body: JSON.stringify({ email, password }),
-    });
-
-    if (!response) {
-      return null;
-    }
-
-    return response.accessToken;
-  }
-
-  async function signUpAuth(
-    signUpSchema: SignUpSchema,
-  ): Promise<string | null> {
-    "use server";
-    return JSON.stringify(signUpSchema, null, 2);
-  }
 
   return (
     <section>
@@ -82,14 +56,14 @@ export default async function SignInPage({ searchParams }: LoginPageProps) {
                 <h2 className="font-bold text-2xl text-primary">
                   Crie sua conta
                 </h2>
-                <RegisterForm onSignUpAuth={signUpAuth} />
+                <RegisterForm />
               </div>
             ) : (
               <div className="grid grid-cols-1 gap-6">
                 <h2 className="font-bold text-2xl text-primary">
                   Entre na sua conta
                 </h2>
-                <SignInForm onSignInAuth={signInAuth} />
+                <SignInForm />
               </div>
             )}
           </div>

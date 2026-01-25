@@ -2,20 +2,17 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 
 import { type SignUpSchema, signUpSchema } from "./sign-up-schema";
-import { errorMessage } from "../../../lib/messages/error-message";
-import { setAccessTokenCookies } from "../../../config/cookies/auth/set-access-token-cookies";
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
 import { ErrorMessageForm } from "../../forms/error-message-form";
+import { useContext } from "react";
+import { AuthContext } from "../../../contexts/auth-context";
 
-interface RegisterFormProps {
-  onSignUpAuth: (data: SignUpSchema) => Promise<string | null>;
-}
+export function RegisterForm() {
+  const { handleSignUp } = useContext(AuthContext);
 
-export function RegisterForm({ onSignUpAuth }: RegisterFormProps) {
   const {
     register,
     handleSubmit,
@@ -25,29 +22,16 @@ export function RegisterForm({ onSignUpAuth }: RegisterFormProps) {
     defaultValues: {
       fullname: "",
       nickname: "",
-      dateOfBirth: "",
-      cpf: "",
+      birthDay: "",
+      document: "",
       email: "",
       password: "",
       confirmPassword: "",
     },
   });
 
-  const router = useRouter();
-
   async function onSubmit(data: SignUpSchema) {
-    const accessToken = await onSignUpAuth(data);
-
-    if (!accessToken) {
-      return errorMessage(
-        "Erro ao tentar criar usuário",
-        "Credenciais inválidas"
-      );
-    }
-
-    setAccessTokenCookies(accessToken);
-
-    router.push("/");
+    await handleSignUp(data);
   }
 
   return (
@@ -66,18 +50,15 @@ export function RegisterForm({ onSignUpAuth }: RegisterFormProps) {
           )}
         </div>
         <div className="flex flex-col items-start gap-2">
-          <Input
-            placeholder="Data de nascimento"
-            {...register("dateOfBirth")}
-          />
-          {errors?.dateOfBirth?.message && (
-            <ErrorMessageForm message={errors.dateOfBirth.message} />
+          <Input placeholder="Data de nascimento" {...register("birthDay")} />
+          {errors?.birthDay?.message && (
+            <ErrorMessageForm message={errors.birthDay.message} />
           )}
         </div>
         <div className="flex flex-col items-start gap-2">
-          <Input placeholder="CPF" {...register("cpf")} />
-          {errors?.cpf?.message && (
-            <ErrorMessageForm message={errors.cpf.message} />
+          <Input placeholder="CPF" {...register("document")} />
+          {errors?.document?.message && (
+            <ErrorMessageForm message={errors.document.message} />
           )}
         </div>
         <div className="flex flex-col items-start gap-2">

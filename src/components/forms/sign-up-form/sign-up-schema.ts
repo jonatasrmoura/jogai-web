@@ -8,10 +8,10 @@ export const signUpSchema = z
     nickname: z.string().min(3, {
       message: "Apelido muito curto.",
     }),
-    dateOfBirth: z.string().min(10, {
+    birthDay: z.string().min(10, {
       message: "Data de nascimento inválida.",
     }),
-    cpf: z.string().min(11, {
+    document: z.string().min(11, {
       message: "CPF inválido.",
     }),
     email: z.email({

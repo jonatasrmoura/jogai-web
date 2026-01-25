@@ -1,0 +1,125 @@
+"use client";
+import { createContext, ReactNode, useEffect, useState } from "react";
+import { parseCookies } from "nookies";
+import { useRouter } from "next/navigation";
+
+import { PrivateHeader } from "../components/header/private-header";
+import { PublicHeader } from "../components/header/public-header";
+
+import { logoutService } from "../services/logout.service";
+import { signInAuthService } from "../services/sign-in-auth.service";
+import { meAuthService } from "../services/me-auth.service";
+
+import type { ShowUserDTO } from "../types/users/show-user.dto";
+import type { RegisterUserAuthDTO } from "../types/users/register-user-auth.dto";
+import { setAccessTokenCookies } from "../config/cookies/auth/set-access-token-cookies";
+import { errorMessage } from "../lib/messages/error-message";
+import { registerUserAuthService } from "../services/register-user-auth.service";
+
+interface AuthProviderProps {
+  children: ReactNode;
+}
+
+interface AuthContextData {
+  user: ShowUserDTO | null;
+  isAuthenticated: boolean;
+  handleLogout(): Promise<void>;
+  handleSignIn(email: string, password: string): Promise<void>;
+  handleSignUp(data: RegisterUserAuthDTO): Promise<void>;
+}
+
+export const AuthContext = createContext({} as AuthContextData);
+
+export function AuthProvider({ children }: AuthProviderProps) {
+  const router = useRouter();
+
+  const [user, setUser] = useState<ShowUserDTO | null>(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    const { "jogai-app.token": token } = parseCookies();
+
+    if (token) {
+      meAuthService().then((userData) => {
+        if (userData) {
+          setUser(userData);
+          setIsAuthenticated(true);
+        }
+      });
+    }
+  }, []);
+
+  async function handleLogout(): Promise<void> {
+    await logoutService();
+    setUser(null);
+    setIsAuthenticated(false);
+    router.push("/login");
+  }
+
+  async function handleSignIn(email: string, password: string): Promise<void> {
+    const accessToken = await signInAuthService(email, password);
+
+    if (!accessToken) {
+      return errorMessage(
+        "Erro ao tentar fazer login",
+        "Credenciais inválidas",
+      );
+    }
+
+    setAccessTokenCookies(accessToken);
+
+    const userData = await meAuthService();
+
+    if (!userData) {
+      return errorMessage(
+        "Erro ao buscar dados do usuário",
+        "Tente tente fazer login novamente ou procure ajuda com o suporte.",
+      );
+    }
+
+    setUser(userData);
+    setIsAuthenticated(true);
+    router.push("/dashboard");
+  }
+
+  async function handleSignUp(data: RegisterUserAuthDTO): Promise<void> {
+    const accessToken = await registerUserAuthService(data);
+
+    if (!accessToken) {
+      return errorMessage(
+        "Erro ao criar conta",
+        "Credenciais inválidas, tente novamente.",
+      );
+    }
+
+    setAccessTokenCookies(accessToken);
+
+    const userData = await meAuthService();
+
+    if (!userData) {
+      return errorMessage(
+        "Erro ao buscar dados do usuário",
+        "Tente tente fazer login novamente ou procure ajuda com o suporte.",
+      );
+    }
+
+    setUser(userData);
+    setIsAuthenticated(true);
+    router.push("/dashboard");
+  }
+
+  return (
+    <AuthContext.Provider
+      value={{
+        user,
+        isAuthenticated,
+        handleSignIn,
+        handleSignUp,
+        handleLogout,
+      }}
+    >
+      {isAuthenticated ? <PrivateHeader /> : <PublicHeader />}
+      {children}
+    </AuthContext.Provider>
+  );
+}

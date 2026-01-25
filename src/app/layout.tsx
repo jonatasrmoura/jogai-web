@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
 import { Roboto, Roboto_Mono } from "next/font/google";
 import "./globals.css";
-import { cookies } from "next/headers";
 
-import { PublicHeader } from "../components/header/public-header";
-import { PrivateHeader } from "../components/header/private-header";
 import { Footer } from "../components/footer";
+import { AuthProvider } from "../contexts/auth-context";
 
 const roboto = Roboto({
   variable: "--font-roboto-sans",
@@ -28,16 +26,13 @@ export default async function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  const cookieStore = await cookies();
-  const token = cookieStore.get("jogai-app.token")?.value;
-  const isAuthenticated = Boolean(token);
-
   return (
     <html lang="pt-BR" suppressHydrationWarning>
       <body className={`${roboto.variable} ${robotoMono.variable} antialiased`}>
-        {isAuthenticated ? <PrivateHeader /> : <PublicHeader />}
-        <main className="py-10 px-5">{children}</main>
-        <Footer />
+        <AuthProvider>
+          <main className="py-10 px-5">{children}</main>
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   );

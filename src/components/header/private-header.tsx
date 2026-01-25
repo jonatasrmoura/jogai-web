@@ -1,20 +1,15 @@
 "use client";
 
+import { useContext } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { Bell } from "lucide-react";
-import { useRouter } from "next/navigation";
 
 import { JogaiIcon } from "../icons/jogai-icon";
-import { logoutService } from "../../services/logout.service";
+import { AuthContext } from "../../contexts/auth-context";
 
 export function PrivateHeader() {
-  const router = useRouter();
-
-  const handleLogout = async () => {
-    await logoutService();
-    router.push("/login");
-  };
+  const { user, handleLogout } = useContext(AuthContext);
 
   return (
     <header className="w-full bg-secondary">
@@ -46,7 +41,7 @@ export function PrivateHeader() {
 
         {/* Notificações + Avatar */}
         <div className="flex items-center gap-4">
-          <button className="relative rounded-full p-2 hover:bg-gray-100">
+          <button className="relative rounded-full p-2 hover:bg-gray-100 cursor-pointer">
             <Bell className="h-5 w-5 text-gray-700" />
             <span className="absolute right-1 top-1 h-2 w-2 rounded-full bg-red-500" />
           </button>
@@ -57,8 +52,11 @@ export function PrivateHeader() {
               className="flex items-center gap-2 rounded-full border border-primary hover:bg-gray-50"
             >
               <Image
-                src="https://avatars.githubusercontent.com/u/66448546?v=4"
-                alt="Jonatas Rosa Moura"
+                src={
+                  user?.avatarUrl ||
+                  "https://avatars.githubusercontent.com/u/66448546?v=4"
+                }
+                alt={user?.fullname || "User Avatar"}
                 className="h-12 w-12 rounded-full object-cover"
                 width={500}
                 height={500}

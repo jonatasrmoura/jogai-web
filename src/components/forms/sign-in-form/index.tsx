@@ -1,22 +1,19 @@
 "use client";
 
+import { useContext } from "react";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 import { signInSchema, type SignInSchema } from "./sign-in-schema";
-import { errorMessage } from "../../../lib/messages/error-message";
-import { setAccessTokenCookies } from "../../../config/cookies/auth/set-access-token-cookies";
 import { Input } from "../../ui/input";
 import { Button } from "../../ui/button";
+import { AuthContext } from "../../../contexts/auth-context";
 import { ErrorMessageForm } from "../../forms/error-message-form";
 
-interface LoginFormProps {
-  onSignInAuth: (email: string, password: string) => Promise<string | null>;
-}
+export function SignInForm() {
+  const { handleSignIn } = useContext(AuthContext);
 
-export function SignInForm({ onSignInAuth }: LoginFormProps) {
   const {
     register,
     handleSubmit,
@@ -26,21 +23,8 @@ export function SignInForm({ onSignInAuth }: LoginFormProps) {
     defaultValues: { email: "", password: "" },
   });
 
-  const router = useRouter();
-
   async function onSubmit({ email, password }: SignInSchema) {
-    const accessToken = await onSignInAuth(email, password);
-
-    if (!accessToken) {
-      return errorMessage(
-        "Erro ao tentar fazer login",
-        "Credenciais inválidas"
-      );
-    }
-
-    setAccessTokenCookies(accessToken);
-
-    router.push("/dashboard");
+    await handleSignIn(email, password);
   }
 
   return (
