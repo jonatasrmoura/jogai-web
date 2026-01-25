@@ -1,16 +1,18 @@
 "use client";
 
 import Image from "next/image";
-import { cn } from "@/lib/utils";
 import Link from "next/link";
+
+import { cn } from "@/lib/utils";
 import { formatBRL } from "../../utils/formatBRL";
 
 export type GameDealCardProps = {
-  title: string;
+  uuid: string;
+  name: string;
   platform: string;
   imageUrl: string;
   status?: "Sell" | "Trade" | "Lend";
-  price?: number;
+  value?: number;
   buyerName: string;
 };
 
@@ -30,23 +32,23 @@ export function MyGameDealCard(props: GameDealCardProps) {
   return (
     <div
       className={cn(
-        "relative w-full rounded-2xl overflow-hidden shadow-lg group transition-all duration-300 hover:scale-[1.03]"
+        "relative w-full rounded-2xl overflow-hidden shadow-lg group transition-all duration-300 hover:scale-[1.03]",
       )}
     >
       <Link href="#">
         <div className="relative aspect-[3/4] w-full">
           <Image
             src={props.imageUrl}
-            alt={props.title}
+            alt={props.name}
             fill
             sizes="(max-width: 768px) 100vw, 25vw"
             className="object-cover"
           />
         </div>
 
-        {props.status && props.status === "Sell" && props.price && (
+        {props.status && props.status === "Sell" && props.value && (
           <span className="absolute top-2 left-2 text-xs font-semibold text-white px-2 py-1 rounded-lg bg-primary">
-            {formatBRL(props.price)}
+            {formatBRL(props.value)}
           </span>
         )}
 
@@ -55,7 +57,7 @@ export function MyGameDealCard(props: GameDealCardProps) {
           <span
             className={cn(
               "absolute top-2 right-2 text-xs font-semibold text-white px-2 py-1 rounded-lg",
-              statusColors[props.status]
+              statusColors[props.status],
             )}
           >
             {props.status}
@@ -65,7 +67,7 @@ export function MyGameDealCard(props: GameDealCardProps) {
         {/* Info */}
         <div className="p-3 bg-white dark:bg-neutral-900">
           <h3 className="text-sm sm:text-base font-semibold text-gray-800 dark:text-gray-100 truncate">
-            {props.title}
+            {props.name}
           </h3>
           <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
             {props.platform}

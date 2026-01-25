@@ -1,4 +1,4 @@
-import { api } from "../../../../services/api";
+import { api } from "../../services/api";
 
 type ListGamesType = {
   page: number;
@@ -10,7 +10,7 @@ type ListGamesType = {
   genreUuid?: string;
 };
 
-export async function listGamesApi(
+export async function listGamesService(
   props: ListGamesType,
 ): Promise<ListGamesResponse> {
   const query = `page=${props.page}&limit=${props.limit}&name=${

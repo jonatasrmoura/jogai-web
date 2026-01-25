@@ -24,7 +24,7 @@ export function PrivateHeader() {
           </Link>
           <Link
             href={{
-              pathname: "/dashboard",
+              pathname: "/marketplace",
               query: { name: "explore" },
             }}
             className="text-gray-700 hover:text-primary"
@@ -48,7 +48,7 @@ export function PrivateHeader() {
 
           <div className="relative">
             <Link
-              href="/dashboard?my-games"
+              href="/marketplace?my-games"
               className="flex items-center gap-2 rounded-full border border-primary hover:bg-gray-50"
             >
               <Image

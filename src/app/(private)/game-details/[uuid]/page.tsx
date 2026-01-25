@@ -3,7 +3,6 @@ import Image from "next/image";
 import { Button } from "../../../../components/ui/button";
 import { api } from "../../../../services/api";
 import type { GetGameDetailsResponseDTO } from "../../../../types/games/get-game-details-response.dto";
-import { formatBRL } from "../../../../utils/formatBRL";
 
 export default async function GameDetailsPage({
   params,

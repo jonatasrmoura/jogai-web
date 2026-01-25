@@ -85,7 +85,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     setUser(userData);
     setIsAuthenticated(true);
-    router.push("/dashboard");
+    router.push("/marketplace");
   }
 
   async function handleSignUp(data: RegisterUserAuthDTO): Promise<void> {
@@ -111,7 +111,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
     setUser(userData);
     setIsAuthenticated(true);
-    router.push("/dashboard");
+    router.push("/marketplace");
   }
 
   return (

@@ -9,7 +9,7 @@ export function LandingNavigation({ defaultUrl }: LandingNavigationProps) {
     <nav className="w-lg pr-10 md:max-w-md flex justify-start items-center text-center">
       <Link
         href={{
-          pathname: "/dashboard",
+          pathname: "/marketplace",
           query: { name: "explore" },
         }}
         className={`w-full font-semibold py-3 ${
@@ -22,7 +22,7 @@ export function LandingNavigation({ defaultUrl }: LandingNavigationProps) {
       </Link>
       <Link
         href={{
-          pathname: "/dashboard",
+          pathname: "/marketplace",
           query: { name: "wishlist" },
         }}
         className={`w-full font-semibold py-3 ${
@@ -35,7 +35,7 @@ export function LandingNavigation({ defaultUrl }: LandingNavigationProps) {
       </Link>
       <Link
         href={{
-          pathname: "/dashboard",
+          pathname: "/marketplace",
           query: { name: "my-games" },
         }}
         className={`w-full font-semibold py-3 ${
@@ -48,7 +48,7 @@ export function LandingNavigation({ defaultUrl }: LandingNavigationProps) {
       </Link>
       <Link
         href={{
-          pathname: "/dashboard",
+          pathname: "/marketplace",
           query: { name: "my-deals" },
         }}
         className={`w-full font-semibold py-3 ${
