@@ -36,17 +36,21 @@ export function AuthProvider({ children }: AuthProviderProps) {
 
   const [user, setUser] = useState<ShowUserDTO | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
+    setLoading(true);
     const { "jogai-app.token": token } = parseCookies();
 
     if (token) {
-      meAuthService().then((userData) => {
-        if (userData) {
-          setUser(userData);
-          setIsAuthenticated(true);
-        }
-      });
+      meAuthService()
+        .then((userData) => {
+          if (userData) {
+            setUser(userData);
+            setIsAuthenticated(true);
+          }
+        })
+        .finally(() => setLoading(false));
     }
   }, []);
 
@@ -120,7 +124,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
         handleLogout,
       }}
     >
-      {isAuthenticated ? <PrivateHeader /> : <PublicHeader />}
+      {loading ? (
+        <div className="font-bold text-2xl">Carregando...</div>
+      ) : (
+        <> {isAuthenticated ? <PrivateHeader /> : <PublicHeader />}</>
+      )}
       {children}
     </AuthContext.Provider>
   );
