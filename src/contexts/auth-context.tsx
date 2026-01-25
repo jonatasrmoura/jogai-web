@@ -15,6 +15,7 @@ import type { RegisterUserAuthDTO } from "../types/users/register-user-auth.dto"
 import { setAccessTokenCookies } from "../config/cookies/auth/set-access-token-cookies";
 import { errorMessage } from "../lib/messages/error-message";
 import { registerUserAuthService } from "../services/register-user-auth.service";
+import { destroyAccessTokenCookies } from "../config/cookies/auth/destroy-access-token-cookies";
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -53,6 +54,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
     await logoutService();
     setUser(null);
     setIsAuthenticated(false);
+    destroyAccessTokenCookies();
     router.push("/login");
   }
 

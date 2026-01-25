@@ -1,7 +1,6 @@
 import { parseCookies } from "nookies";
 import { jwtDecode } from "jwt-decode";
 
-import { destroyAccessTokenCookies } from "../config/cookies/auth/destroy-access-token-cookies";
 import { api } from "./api";
 
 type LogoutResponse = {
@@ -21,8 +20,6 @@ export async function logoutService(): Promise<string> {
   if (!responseApi) {
     throw new Error("Erro ao fazer logout");
   }
-
-  destroyAccessTokenCookies();
 
   return responseApi.message;
 }
