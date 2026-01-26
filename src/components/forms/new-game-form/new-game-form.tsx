@@ -1,5 +1,6 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Image from "next/image";
 import { Plus } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
@@ -15,11 +16,12 @@ import { newGameSchema } from "./new-game-schema";
 import { listPlatformsMock } from "../../../app/(private)/new-game/mocks/list-platforms-mock";
 import { listGenreMock } from "../../../app/(private)/new-game/mocks/list-genre-mock";
 import { listConditionMock } from "../../../app/(private)/new-game/mocks/list-condition-mock";
+import { createGameService } from "../../../services/games/create-game.service";
 
 type NewGameFormData = z.infer<typeof newGameSchema>;
 
 export function NewGameForm() {
-  const [imagePreview, setImagePreview] = useState<string | null>(null);
+  const [previews, setPreviews] = useState<string[]>([]);
 
   const {
     register,
@@ -33,38 +35,62 @@ export function NewGameForm() {
   });
 
   function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const file = event.target.files?.[0];
-    if (!file) return;
+    const selectedFiles = event.target.files;
+    if (!selectedFiles) return;
 
-    setValue("image", file); // ✅ registra o arquivo no form
+    const filesArray = Array.from(selectedFiles);
 
-    const reader = new FileReader();
-    reader.onload = () => setImagePreview(reader.result as string);
-    reader.readAsDataURL(file);
+    // 1. Validar limite de 5 imagens
+    if (previews.length + filesArray.length > 5) {
+      alert("Você pode enviar no máximo 5 imagens");
+      return;
+    }
+
+    // 2. Criar novos previews
+    const newPreviews = filesArray.map((file) => URL.createObjectURL(file));
+    setPreviews((prev) => [...prev, ...newPreviews]);
+
+    // 3. Atualizar o valor no React Hook Form
+    // Nota: Para o backend receber múltiplos 'files', precisamos converter para array
+    setValue("images", selectedFiles);
   }
 
   async function onSubmit(data: NewGameFormData) {
     const formData = new FormData();
 
-    Object.entries(data).forEach(([key, value]) => {
-      formData.append(key, value);
+    // 1. Campos Simples (Importante: 'value' e 'isDigital' como o backend espera)
+    formData.append("name", data.name);
+    formData.append("platform", data.platform);
+    formData.append("condition", data.condition);
+    formData.append("description", data.description);
+    formData.append("value", data.price.replace(/\D/g, "")); // Limpa R$ para enviar só número
+    formData.append("isDigital", "false"); // Ou adicione um checkbox no form
+
+    // 2. Gêneros (Seu backend espera 'genresUuid' como array JSON)
+    formData.append("genresUuid", JSON.stringify([data.genre]));
+
+    // 3. Imagens (O backend faz loop em parts, o fieldname aqui pode ser 'files')
+    Array.from(data.images).forEach((file) => {
+      formData.append("files", file);
     });
 
     try {
-      // const response = await axios.post(
-      //   "https://sua-api.com/games/create",
-      //   formData,
-      //   { headers: { "Content-Type": "multipart/form-data" } }
-      // );
+      // Use sua instância da API (axios ou fetch)
+      await createGameService(formData);
 
       alert("Jogo cadastrado com sucesso!");
       reset();
-      setImagePreview(null);
+      setPreviews([]);
     } catch (error) {
       console.error(error);
       alert("Erro ao cadastrar o jogo");
     }
   }
+
+  useEffect(() => {
+    // Cleanup: remove as URLs da memória quando o componente "morre"
+    return () => previews.forEach((url) => URL.revokeObjectURL(url));
+  }, [previews]);
 
   return (
     <form
@@ -72,15 +98,77 @@ export function NewGameForm() {
       onSubmit={handleSubmit(onSubmit)}
     >
       {/* Upload da imagem */}
-      <div className="w-full mb-2">
-        <InputImageFile
-          label="Game Cover Image"
-          id="file"
-          onChange={handleFileChange}
-          preview={imagePreview ?? undefined}
-          messageError={!imagePreview ? errors?.image?.message : undefined}
-        />
+      <div className="w-full mb-2 space-y-4">
+        {/* CARROSSEL MANUAL DE PREVIEW 
+         - Aparece apenas se houver imagens selecionadas
+      */}
+        {previews.length > 0 ? (
+          <div
+            className="
+              w-full flex flex-row gap-3 
+              overflow-x-auto pb-2 
+            
+              scrollbar-thumb-zinc-300 scrollbar-track-transparent scrollbar-thin
+              pr-12
+            "
+          >
+            {previews.map((src, index) => (
+              <div
+                key={index}
+                className="relative w-full h-[400px] md:h-[500px] lg:h-[600px] snap-center shrink-0 rounded-xl overflow-hidden border-2 border-zinc-200"
+              >
+                <Image
+                  src={src}
+                  alt={`Preview ${index}`}
+                  className="w-full h-full object-cover"
+                  fill
+                  height={500}
+                  width={500}
+                />
+                <button
+                  type="button"
+                  onClick={() => {
+                    // Lógica para remover uma imagem específica se desejar
+                    setPreviews((prev) => prev.filter((_, i) => i !== index));
+                  }}
+                  className="absolute top-1 right-1 bg-red-500 text-white rounded-full p-1 text-xs w-6"
+                >
+                  ✕
+                </button>
+              </div>
+            ))}
+
+            {/* Botão de Adicionar Mais (se for menos de 5) */}
+            {previews.length < 5 && (
+              <label className="min-w-[120px] h-[150px] flex flex-col items-center justify-center border-2 border-dashed border-zinc-300 rounded-xl cursor-pointer hover:bg-zinc-50 transition-colors">
+                <Plus className="text-zinc-400" />
+                <span className="text-[10px] text-zinc-400 font-bold uppercase">
+                  Add
+                </span>
+                <input
+                  type="file"
+                  multiple
+                  className="hidden"
+                  onChange={handleFileChange}
+                  accept="image/*"
+                />
+              </label>
+            )}
+          </div>
+        ) : (
+          /* Estado vazio: o seu InputImageFile original */
+          <InputImageFile
+            label="Imagens do Jogo (Máx 5)"
+            name="images"
+            id="file"
+            multiple
+            onChange={handleFileChange}
+            messageError={errors?.images?.message}
+          />
+        )}
       </div>
+
+      {/* ============================================ */}
 
       {/* Nome */}
       <div className="w-full">
