@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import Image from "next/image";
-import { Plus } from "lucide-react";
+import { Plus, Loader2 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,17 +10,24 @@ import { InputImageFile } from "../../../components/inputs/input-image-file";
 import { InputLabel } from "../../../components/inputs/input-label";
 import { SelectLabel } from "../../../components/selects/select-label";
 import { Button } from "../../../components/ui/button";
+import { MultiSelectLabel } from "../../selects/multi-select-label";
 import { TextAreaLabel } from "../../inputs/text-area-label";
 
 import { newGameSchema } from "./new-game-schema";
-import { listPlatformsMock } from "../../../app/(private)/new-game/mocks/list-platforms-mock";
-import { listGenreMock } from "../../../app/(private)/new-game/mocks/list-genre-mock";
-import { listConditionMock } from "../../../app/(private)/new-game/mocks/list-condition-mock";
+import { listPlatformsMock } from "../../../utils/mocks/list-platforms-mock";
+import { listConditionMock } from "../../../utils/mocks/list-condition-mock";
 import { createGameService } from "../../../services/games/create-game.service";
+import { errorMessage } from "../../../lib/messages/error-message";
+import { successMessage } from "../../../lib/messages/success-message";
+import type { GetGenreDTO } from "../../../types/genres/get-genre.dto";
 
 type NewGameFormData = z.infer<typeof newGameSchema>;
 
-export function NewGameForm() {
+interface NewGameFormProps {
+  listGenres: GetGenreDTO[];
+}
+
+export function NewGameForm({ listGenres }: NewGameFormProps) {
   const [previews, setPreviews] = useState<string[]>([]);
 
   const {
@@ -28,7 +35,7 @@ export function NewGameForm() {
     handleSubmit,
     setValue,
     control,
-    formState: { errors },
+    formState: { errors, isSubmitting },
     reset,
   } = useForm<NewGameFormData>({
     resolver: zodResolver(newGameSchema),
@@ -52,39 +59,44 @@ export function NewGameForm() {
 
     // 3. Atualizar o valor no React Hook Form
     // Nota: Para o backend receber múltiplos 'files', precisamos converter para array
-    setValue("images", selectedFiles);
+    setValue("files", selectedFiles);
   }
 
   async function onSubmit(data: NewGameFormData) {
     const formData = new FormData();
 
-    // 1. Campos Simples (Importante: 'value' e 'isDigital' como o backend espera)
+    const value = (Number(data.price.replace(/\D/g, "")) / 100).toFixed(2);
+
     formData.append("name", data.name);
     formData.append("platform", data.platform);
     formData.append("condition", data.condition);
     formData.append("description", data.description);
-    formData.append("value", data.price.replace(/\D/g, "")); // Limpa R$ para enviar só número
-    formData.append("isDigital", "false"); // Ou adicione um checkbox no form
+    formData.append("value", value); // Limpa R$ para enviar só número
+    formData.append("isDigital", "false");
+    formData.append("genresUuid", JSON.stringify(data.genresUuid));
 
-    // 2. Gêneros (Seu backend espera 'genresUuid' como array JSON)
-    formData.append("genresUuid", JSON.stringify([data.genre]));
-
-    // 3. Imagens (O backend faz loop em parts, o fieldname aqui pode ser 'files')
-    Array.from(data.images).forEach((file) => {
-      formData.append("files", file);
-    });
-
-    try {
-      // Use sua instância da API (axios ou fetch)
-      await createGameService(formData);
-
-      alert("Jogo cadastrado com sucesso!");
-      reset();
-      setPreviews([]);
-    } catch (error) {
-      console.error(error);
-      alert("Erro ao cadastrar o jogo");
+    if (data.files) {
+      Array.from(data.files).forEach((file) => {
+        formData.append("file", file);
+      });
     }
+
+    const createGame = await createGameService(formData);
+
+    if (!createGame) {
+      return errorMessage(
+        "Erro ao cadastrar o jogo",
+        "Verifique os dados do jogo e tente novamente.",
+      );
+    }
+
+    await successMessage(
+      "Jogo cadastrado",
+      "Seu jogo foi cadastrado com sucesso",
+    );
+
+    reset();
+    setPreviews([]);
   }
 
   useEffect(() => {
@@ -121,7 +133,6 @@ export function NewGameForm() {
                   src={src}
                   alt={`Preview ${index}`}
                   className="w-full h-full object-cover"
-                  fill
                   height={500}
                   width={500}
                 />
@@ -159,11 +170,11 @@ export function NewGameForm() {
           /* Estado vazio: o seu InputImageFile original */
           <InputImageFile
             label="Imagens do Jogo (Máx 5)"
-            name="images"
+            name="file"
             id="file"
             multiple
             onChange={handleFileChange}
-            messageError={errors?.images?.message}
+            messageError={errors?.files?.message}
           />
         )}
       </div>
@@ -192,14 +203,17 @@ export function NewGameForm() {
         />
       </div>
 
-      {/* Gênero */}
+      {/* Gênero - Agora usando MultiSelect */}
       <div className="w-full">
-        <SelectLabel
-          label="Genre"
-          name="genre"
+        <MultiSelectLabel
+          label="Genres"
+          name="genresUuid" // Nome deve bater com o seu Zod Schema
           control={control}
-          data={listGenreMock}
-          messageError={errors?.genre?.message}
+          data={listGenres.map((genre) => ({
+            label: genre.name,
+            value: genre.uuid,
+          }))}
+          messageError={errors?.genresUuid?.message}
         />
       </div>
 
@@ -236,9 +250,22 @@ export function NewGameForm() {
         />
       </div>
 
-      <Button className="w-full" type="submit">
-        <Plus />
-        Salvar jogo
+      <Button
+        className="w-full"
+        type="submit"
+        disabled={isSubmitting} // Desativa o botão durante o envio
+      >
+        {isSubmitting ? (
+          <>
+            <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+            Salvando jogo...
+          </>
+        ) : (
+          <>
+            <Plus className="mr-2 h-4 w-4" />
+            Salvar jogo
+          </>
+        )}
       </Button>
     </form>
   );

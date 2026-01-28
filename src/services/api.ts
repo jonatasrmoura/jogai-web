@@ -17,19 +17,22 @@ export async function api<T>(
   try {
     const isRequestFile = url.includes("/file");
 
+    const isFormData = options?.body instanceof FormData;
+
     const response = await fetch(`${BASE_URL}${url}`, {
       ...options,
       signal: controller.signal,
-      headers: !isRequestFile
-        ? {
-            "Content-Type": "application/json",
-            Authorization: accessToken ? `Bearer ${accessToken}` : "",
-            ...(options?.headers || {}),
-          }
-        : {
-            Authorization: accessToken ? `Bearer ${accessToken}` : "",
-            ...(options?.headers || {}),
-          },
+      headers: {
+        // 1. Sempre envia o Authorization se houver token
+        Authorization: accessToken ? `Bearer ${accessToken}` : "",
+
+        // 2. Só adiciona JSON se NÃO for FormData e NÃO for uma rota de arquivo
+        ...(!isFormData &&
+          !isRequestFile && { "Content-Type": "application/json" }),
+
+        // 3. Mantém outros headers caso você passe manualmente (exceto Content-Type se for FormData)
+        ...(options?.headers || {}),
+      },
     });
 
     clearTimeout(timeoutId);

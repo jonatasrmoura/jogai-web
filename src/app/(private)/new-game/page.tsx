@@ -1,6 +1,9 @@
 import { NewGameForm } from "../../../components/forms/new-game-form/new-game-form";
+import { listGenresService } from "../../../services/genres/list-genres.service";
 
-export default function NewGamePage() {
+export default async function NewGamePage() {
+  const { data: listGenres } = await listGenresService({ limit: 50, page: 1 });
+
   return (
     <main className="w-full flex flex-col items-center">
       <div className="text-center">
@@ -8,7 +11,7 @@ export default function NewGamePage() {
         <p className="text-neutral-500">Share your game with the community!</p>
       </div>
 
-      <NewGameForm />
+      <NewGameForm listGenres={listGenres} />
     </main>
   );
 }
