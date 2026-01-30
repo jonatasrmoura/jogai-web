@@ -1,16 +1,11 @@
 "use client";
-
-import { useContext } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import { Bell } from "lucide-react";
 
 import { JogaiIcon } from "../icons/jogai-icon";
-import { AuthContext } from "../../contexts/auth-context";
+import { ProfileMenu } from "../drop-down/profile-menu";
 
 export function PrivateHeader() {
-  const { user, handleLogout } = useContext(AuthContext);
-
   return (
     <header className="w-full bg-secondary">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
@@ -47,31 +42,7 @@ export function PrivateHeader() {
           </button>
 
           <div className="relative">
-            <Link
-              href="/marketplace?my-games"
-              className="flex items-center gap-2 rounded-full border border-primary hover:bg-gray-50"
-            >
-              <Image
-                src={
-                  user?.avatarUrl ||
-                  "https://avatars.githubusercontent.com/u/66448546?v=4"
-                }
-                alt={user?.fullname || "User Avatar"}
-                className="h-12 w-12 rounded-full object-cover"
-                width={500}
-                height={500}
-              />
-            </Link>
-
-            {/* Dropdown simulando menu */}
-            <div className="absolute right-0 mt-2 w-40 rounded-md border bg-secondary shadow-md group-hover:block">
-              <button
-                onClick={handleLogout}
-                className="block w-full px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100"
-              >
-                Logout
-              </button>
-            </div>
+            <ProfileMenu />
           </div>
         </div>
       </div>
