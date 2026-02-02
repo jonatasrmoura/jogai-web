@@ -5,7 +5,8 @@ import {
   CreditCardIcon,
   LogOutIcon,
   SettingsIcon,
-  UserIcon,
+  LockKeyhole,
+  CircleUserRound,
 } from "lucide-react";
 
 import {
@@ -43,7 +44,7 @@ export function ProfileMenu() {
       <DropdownMenuContent>
         <Link href="/profile">
           <DropdownMenuItem className="cursor-pointer">
-            <UserIcon />
+            <CircleUserRound />
             Profile
           </DropdownMenuItem>
         </Link>
@@ -51,7 +52,14 @@ export function ProfileMenu() {
         <Link href="/profile">
           <DropdownMenuItem className="cursor-pointer">
             <CreditCardIcon />
-            Billing
+            Account
+          </DropdownMenuItem>
+        </Link>
+
+        <Link href="/profile">
+          <DropdownMenuItem className="cursor-pointer">
+            <LockKeyhole />
+            Private
           </DropdownMenuItem>
         </Link>
 
