@@ -15,6 +15,7 @@ export interface GetGameDetailsResponseDTO {
   platform: string;
   condition: GameConditionEnum;
   isDigital: boolean;
+  isFavorite: boolean;
   value: number;
   description: string;
   sold: boolean;

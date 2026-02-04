@@ -4,6 +4,7 @@ import { Button } from "../../../../components/ui/button";
 import { api } from "../../../../services/api";
 import type { GetGameDetailsResponseDTO } from "../../../../types/games/get-game-details-response.dto";
 import { ArrowBigLeftDash, ArrowBigRightDash } from "lucide-react";
+import { FavoriteButton } from "../../../../components/buttons/favorite-button";
 
 export default async function GameDetailsPage({
   params,
@@ -14,6 +15,10 @@ export default async function GameDetailsPage({
 
   const game = await api<GetGameDetailsResponseDTO>(`/games/${uuid}`, {
     method: "GET",
+    cache: "force-cache",
+    next: {
+      tags: ["toggle-favorite-game"],
+    },
   });
 
   if (!game) {
@@ -30,11 +35,13 @@ export default async function GameDetailsPage({
           - Mobile: Scroll horizontal (flex-row + overflow-x-auto)
           - Desktop (lg:): Coluna vertical, largura fixa (ex: 60%), scroll vertical
       */}
-      <div className="px-4 text-primary font-bold flex items-center justify-between lg:hidden">
-        <ArrowBigLeftDash />
-        Arraste para o lado
-        <ArrowBigRightDash />
-      </div>
+      {game.images.length > 2 && (
+        <div className="px-4 text-primary font-bold flex items-center justify-between lg:hidden">
+          <ArrowBigLeftDash />
+          Arraste para o lado
+          <ArrowBigRightDash />
+        </div>
+      )}
       <aside
         className="
         w-full lg:w-[50%]
@@ -95,7 +102,15 @@ export default async function GameDetailsPage({
       >
         <div className="max-w-xl mx-auto w-full space-y-8">
           {/* Header do Jogo */}
+
           <header className="space-y-2">
+            <div className="absolute top-173 right-80">
+              <FavoriteButton
+                gameUuid={game.uuid}
+                gameName={game.name}
+                isFavorite={game.isFavorite}
+              />
+            </div>
             <div className="flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-tighter">
               <span>{game.platform}</span>
               <span className="w-1 h-1 rounded-full bg-zinc-300" />
