@@ -24,6 +24,7 @@ export async function listMyGamesService({
         description: game.description,
         sold: game.sold,
         images: game.images,
+        favorites: game.favorites,
         genres: game.genres,
       }))
     : [];

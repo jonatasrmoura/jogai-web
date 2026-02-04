@@ -23,6 +23,10 @@ export async function listGamesService(
 
   const response = await api<ListGamesResponse>(`/games?${query}`, {
     method: "GET",
+    cache: "force-cache",
+    next: {
+      tags: ["toggle-favorite-game"],
+    },
   });
 
   if (!response) {

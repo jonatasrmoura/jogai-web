@@ -1,12 +1,7 @@
-"use client";
-
-import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Heart } from "lucide-react";
 
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 
 interface GameExploreCardProps {
   uuid: string;
@@ -14,44 +9,22 @@ interface GameExploreCardProps {
   name: string;
   value: string;
   image: string;
-  isFavorite: boolean;
   platform: string;
 }
 
 export function GameExploreCard(props: GameExploreCardProps) {
-  const [gameExplore, setGameExplore] = useState<GameExploreCardProps>(props);
-
-  const handleFavorite = () => {
-    setGameExplore((prev) => ({ ...prev, isFavorite: !prev.isFavorite }));
-  };
-
-  const typeLabel = gameExplore.value ? `R$ ${gameExplore.value}` : "Sell";
+  const typeLabel = props.value ? `R$ ${props.value}` : "Sell";
 
   return (
     <Card className="md:max-w-[250px] border-0 bg-transparent group transition-all duration-300 hover:scale-[1.03]">
-      <Link href={`/game-details/${props.uuid}`}>
+      <Link href={`/game-details/${props.uuid}`} className="relative">
         <div className="relative w-full h-[370px] rounded-xl overflow-hidden shadow-md">
           <Image
-            src={gameExplore.image}
-            alt={`${gameExplore.name}-${gameExplore.gameId}`}
+            src={props.image}
+            alt={`${props.name}-${props.gameId}`}
             fill
             className="object-cover"
           />
-
-          {/* Botão de favoritar */}
-          <Button
-            onClick={handleFavorite}
-            className={`absolute top-2 right-2 ${
-              gameExplore.isFavorite ? "bg-primary" : "bg-white"
-            } rounded-full p-[6px] shadow-md hover:scale-105 transition`}
-          >
-            <Heart
-              size={18}
-              className={`${
-                gameExplore.isFavorite ? "text-white" : "text-gray-500"
-              }`}
-            />
-          </Button>
 
           {/* Barra roxa inferior */}
           <div className="absolute bottom-0 left-0 w-full bg-primary text-white text-sm font-semibold px-3 py-1 flex items-center justify-center">
@@ -61,10 +34,10 @@ export function GameExploreCard(props: GameExploreCardProps) {
 
         {/* Texto abaixo */}
         <div className="mt-2 text-[14px] font-semibold truncate">
-          {gameExplore.name}
+          {props.name}
         </div>
         <div className="text-[13px] text-gray-500">
-          <p>{gameExplore.platform}</p>
+          <p>{props.platform}</p>
         </div>
       </Link>
     </Card>

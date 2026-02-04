@@ -17,7 +17,6 @@ export async function ListMyFavoritesGames() {
               key={game.uuid}
               uuid={game.uuid}
               gameId={game.id}
-              isFavorite={false}
               image={game.images[0].url}
               name={game.name}
               platform={game.platform}

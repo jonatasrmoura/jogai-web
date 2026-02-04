@@ -1,3 +1,5 @@
+import type { FavoriteGameDTO } from "./favorite-game.dto";
+
 declare global {
   export interface ListGamesDTO {
     uuid: string;
@@ -10,6 +12,7 @@ declare global {
     sold: boolean;
     images: Array<{ url: string; position: number }>;
     genres: Array<{ uuid: string; name: string }>;
+    favorites: Array<FavoriteGameDTO>;
   }
 }
 
