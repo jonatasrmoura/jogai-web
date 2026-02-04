@@ -3,6 +3,7 @@ import Image from "next/image";
 import { Button } from "../../../../components/ui/button";
 import { api } from "../../../../services/api";
 import type { GetGameDetailsResponseDTO } from "../../../../types/games/get-game-details-response.dto";
+import { ArrowBigLeftDash, ArrowBigRightDash } from "lucide-react";
 
 export default async function GameDetailsPage({
   params,
@@ -24,20 +25,27 @@ export default async function GameDetailsPage({
        - Mobile: Fluxo normal (coluna)
        - Desktop (md:): Flex Row, altura fixa da tela (100vh - header) para travar o layout e permitir scrolls internos
     */
-    <div className="flex flex-col md:flex-row md:h-[calc(100vh-64px)] w-full overflow-hidden bg-white dark:bg-zinc-950">
+    <div className="flex flex-col lg:flex-row lg:h-[calc(100vh-64px)] w-full overflow-hidden bg-white dark:bg-zinc-950">
       {/* ASIDE: GALERIA DE IMAGENS
           - Mobile: Scroll horizontal (flex-row + overflow-x-auto)
-          - Desktop (md:): Coluna vertical, largura fixa (ex: 60%), scroll vertical
+          - Desktop (lg:): Coluna vertical, largura fixa (ex: 60%), scroll vertical
       */}
+      <div className="px-4 text-primary font-bold flex items-center justify-between lg:hidden">
+        <ArrowBigLeftDash />
+        Arraste para o lado
+        <ArrowBigRightDash />
+      </div>
       <aside
         className="
-        w-full md:w-[50%] lg:w-[55%]
-        flex flex-row md:flex-col 
-        overflow-x-auto md:overflow-y-auto 
+        w-full lg:w-[50%]
+        flex flex-row lg:flex-col 
+        overflow-x-auto lg:overflow-y-auto 
         gap-4 p-4
         bg-zinc-50 dark:bg-zinc-950
         scrollbar-hide
-        snap-x md:snap-none
+        snap-x lg:snap-none
+        border-r-2
+        border-primary
       "
       >
         {game.images.map((image) => (
@@ -45,14 +53,16 @@ export default async function GameDetailsPage({
             key={image.url}
             className="
               /* MOBILE: Define largura baseada na tela e altura proporcional */
-              min-w-[85vw] md:min-w-0 
-              aspect-[4/3] md:aspect-auto
+              w-[250px]
+              h-[400px]
               
               /* DESKTOP: Altura fixa e largura total */
-              md:w-full 
-              md:h-[600px] 
+              lg:w-[400px] 
+              lg:h-[600px] 
+              lg:aspect-auto
               
               relative 
+              self-end
               shrink-0 
               rounded-2xl 
               overflow-hidden
