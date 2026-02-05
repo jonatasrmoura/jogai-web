@@ -1,6 +1,5 @@
 "use client";
 import Link from "next/link";
-import { Bell } from "lucide-react";
 
 import { JogaiIcon } from "../icons/jogai-icon";
 import { ProfileMenu } from "../drop-down/profile-menu";

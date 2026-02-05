@@ -5,6 +5,7 @@ import { api } from "../../../../services/api";
 import type { GetGameDetailsResponseDTO } from "../../../../types/games/get-game-details-response.dto";
 import { ArrowBigLeftDash, ArrowBigRightDash } from "lucide-react";
 import { FavoriteButton } from "../../../../components/buttons/favorite-button";
+import { NoAvatarProfile } from "../../../../components/no-avatar-profile";
 
 export default async function GameDetailsPage({
   params,
@@ -123,7 +124,7 @@ export default async function GameDetailsPage({
 
           {/* Seção do Vendedor */}
           <div className="flex items-center gap-4 py-6 border-y border-zinc-100 dark:border-zinc-800">
-            {game.user.avatarUrl && (
+            {game.user.avatarUrl ? (
               <Image
                 src={game.user.avatarUrl}
                 alt={game.user.fullname}
@@ -131,6 +132,10 @@ export default async function GameDetailsPage({
                 width={160}
                 height={160}
               />
+            ) : (
+              <div className="w-20 h-20 text-3xl border-2 border-zinc-300 p-1 rounded-full">
+                <NoAvatarProfile userName={game.user.fullname} />
+              </div>
             )}
             <div>
               <p className="text-xs text-zinc-500 font-medium uppercase">

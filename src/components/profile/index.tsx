@@ -1,31 +1,64 @@
 "use client";
 
+import { useContext, useState } from "react";
 import { Calendar, User, AtSign, Info, CalendarDays } from "lucide-react";
 import Image from "next/image";
 import { format } from "date-fns";
 import { ptBR } from "date-fns/locale";
 
-import { Card, CardContent, CardHeader } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { ShowUserDTO } from "../../types/users/show-user.dto";
-import { avatarUrlMock } from "../../utils/mocks/avatar-url-mock";
+import { NoAvatarProfile } from "../no-avatar-profile";
+import { updateAvatarService } from "../../services/user-auth/update-avatar.service";
+import { errorMessage } from "../../lib/messages/error-message";
+import { successMessage } from "../../lib/messages/success-message";
+import { AuthContext } from "../../contexts/auth-context";
 
 interface ProfileProps {
   user: ShowUserDTO;
 }
 
 export default function Profile({ user }: ProfileProps) {
-  // const formattedBirthDate = format(
-  //   new Date(user.birthDay),
-  //   "dd 'de' MMMM 'de' yyyy",
-  //   { locale: ptBR },
-  // );
+  const { setUserIsUpdate } = useContext(AuthContext);
+  const [preview, setPreview] = useState<string | null>(null);
+  // const [avatarFile, setAvatarFile] = useState<File | null>(null);
+
   const formattedJoinedDate = format(
     new Date(user.createdAt),
     "MMMM 'de' yyyy",
     { locale: ptBR },
   );
+
+  async function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const formData = new FormData();
+    const selectedFiles = event.target.files;
+
+    if (!selectedFiles) return;
+
+    const fileSelected = selectedFiles[0];
+    const newPreview = URL.createObjectURL(fileSelected);
+
+    formData.append("file", fileSelected);
+
+    setPreview(newPreview);
+    // setAvatarFile(fileSelected);
+
+    const result = await updateAvatarService(formData);
+
+    console.log(result);
+
+    if (!result)
+      return errorMessage(
+        "Erro ao atualizado Avatar!",
+        "Verifique seu arquivo de imagem e tente novamente.",
+      );
+
+    setUserIsUpdate(true);
+
+    successMessage("Avatar atualizado com sucesso!", "");
+  }
 
   return (
     <div className="min-h-screen bg-zinc-50/50 dark:bg-zinc-950 p-4 md:p-8">
@@ -42,13 +75,34 @@ export default function Profile({ user }: ProfileProps) {
               {/* Avatar com Borda */}
               <div className="relative group">
                 <div className="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-white dark:border-zinc-900 overflow-hidden shadow-2xl transition-transform duration-300 group-hover:scale-105">
-                  <Image
-                    src={user.avatarUrl || avatarUrlMock}
-                    alt={user.fullname}
-                    fill
-                    className="object-cover rounded-full"
-                  />
+                  {preview || user?.avatarUrl ? (
+                    <label
+                      htmlFor="edit-avatar"
+                      className="w-full h-full cursor-pointer"
+                    >
+                      <Image
+                        src={preview || (user.avatarUrl as string)}
+                        alt={user.fullname}
+                        fill
+                        className="object-cover rounded-full"
+                      />
+                    </label>
+                  ) : (
+                    <label
+                      htmlFor="edit-avatar"
+                      className="text-7xl w-full h-full cursor-pointer"
+                    >
+                      <NoAvatarProfile userName={user.fullname} />
+                    </label>
+                  )}
                 </div>
+                <input
+                  type="file"
+                  className="hidden"
+                  id="edit-avatar"
+                  onChange={handleFileChange}
+                  accept="image/*"
+                />
               </div>
 
               {/* Nome e Nickname */}

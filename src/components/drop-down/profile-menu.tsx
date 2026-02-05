@@ -17,9 +17,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { AuthContext } from "../../contexts/auth-context";
+import { NoAvatarProfile } from "../no-avatar-profile";
 
 export function ProfileMenu() {
   const { user, handleLogout } = useContext(AuthContext);
+
+  if (!user) return <div>Carregando...</div>;
 
   return (
     <DropdownMenu>
@@ -28,16 +31,19 @@ export function ProfileMenu() {
           href="/marketplace?my-games"
           className="flex items-center gap-2 rounded-full border border-primary hover:bg-gray-50"
         >
-          <Image
-            src={
-              user?.avatarUrl ||
-              "https://avatars.githubusercontent.com/u/66448546?v=4"
-            }
-            alt={user?.fullname || "User Avatar"}
-            className="h-12 w-12 rounded-full object-cover"
-            width={500}
-            height={500}
-          />
+          {user.avatarUrl ? (
+            <Image
+              src={user.avatarUrl}
+              alt={user.fullname || "User Avatar"}
+              className="h-12 w-12 rounded-full object-cover"
+              width={700}
+              height={700}
+            />
+          ) : (
+            <div className="w-14 h-14 text-3xl">
+              <NoAvatarProfile userName={user.fullname} />
+            </div>
+          )}
         </Link>
       </DropdownMenuTrigger>
 

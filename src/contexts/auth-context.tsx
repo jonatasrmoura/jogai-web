@@ -1,5 +1,12 @@
 "use client";
-import { createContext, ReactNode, useEffect, useState } from "react";
+import {
+  createContext,
+  Dispatch,
+  ReactNode,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import { parseCookies } from "nookies";
 import { useRouter } from "next/navigation";
 
@@ -27,6 +34,7 @@ interface AuthContextData {
   handleLogout(): Promise<void>;
   handleSignIn(email: string, password: string): Promise<void>;
   handleSignUp(data: RegisterUserAuthDTO): Promise<void>;
+  setUserIsUpdate: Dispatch<SetStateAction<boolean>>;
 }
 
 export const AuthContext = createContext({} as AuthContextData);
@@ -35,11 +43,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const router = useRouter();
 
   const [user, setUser] = useState<ShowUserDTO | null>(null);
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [loading, setLoading] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [userIsUpdate, setUserIsUpdate] = useState<boolean>(true);
 
   useEffect(() => {
+    if (!userIsUpdate) return;
+
     setLoading(true);
+
     const { "jogai-app.token": token } = parseCookies();
 
     if (token) {
@@ -50,9 +62,12 @@ export function AuthProvider({ children }: AuthProviderProps) {
             setIsAuthenticated(true);
           }
         })
-        .finally(() => setLoading(false));
+        .finally(() => {
+          setLoading(false);
+          setUserIsUpdate(false);
+        });
     }
-  }, []);
+  }, [userIsUpdate]);
 
   async function handleLogout(): Promise<void> {
     await logoutService();
@@ -122,6 +137,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         handleSignIn,
         handleSignUp,
         handleLogout,
+        setUserIsUpdate,
       }}
     >
       {loading ? (
