@@ -1,8 +1,12 @@
 import { listMyFavoritesGamesService } from "../../services/games/list-my-favorites-games.service";
 import { GameExploreCard } from "../cards/game-explore-card";
 
-export async function ListMyFavoritesGames() {
-  const listMyFavoritesGames = await listMyFavoritesGamesService();
+export async function ListMyFavoritesGames({ search }: { search?: string }) {
+  const listMyFavoritesGames = await listMyFavoritesGamesService({
+    page: 1,
+    limit: 30,
+    name: search,
+  });
 
   return (
     <>

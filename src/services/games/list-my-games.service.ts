@@ -2,12 +2,27 @@ import { api } from "../api";
 
 interface ListMyGamesServiceRequest {
   sold: "false" | "true";
+  page: number;
+  limit: number;
+  name?: string;
+  platform?: string;
+  condition?: string;
+  isDigital?: boolean;
+  genreUuid?: string;
 }
 
-export async function listMyGamesService({
-  sold,
-}: ListMyGamesServiceRequest): Promise<ListGamesDTO[]> {
-  const myGames = await api<ListGamesResponse>(`/games/me?sold=${sold}`, {
+export async function listMyGamesService(
+  props: ListMyGamesServiceRequest,
+): Promise<ListGamesDTO[]> {
+  const query = `page=${props.page}&limit=${props.limit}&sold=${props.sold}&name=${
+    props.name || ""
+  }&platform=${props.platform || ""}&condition=${
+    props.condition || ""
+  }&isDigital=${props.isDigital ? "true" : "false"}&genreUuid=${
+    props.genreUuid || ""
+  }`;
+
+  const myGames = await api<ListGamesResponse>(`/games/me?${query}`, {
     method: "GET",
   });
 

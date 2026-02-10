@@ -5,7 +5,7 @@ import { GameExploreCard } from "../cards/game-explore-card";
 export async function ListGamesExplore({ search }: { search?: string }) {
   const { data: listGames } = await listGamesService({
     page: 1,
-    limit: 10,
+    limit: 30,
     name: search,
   });
 

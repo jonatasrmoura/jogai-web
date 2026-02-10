@@ -1,8 +1,13 @@
 import { listMyGamesService } from "../../services/games/list-my-games.service";
 import { MyGameDealCard } from "../cards/my-game-deal-card";
 
-export async function ListMyDeals() {
-  const listMyDeals = await listMyGamesService({ sold: "true" });
+export async function ListMyDeals({ search }: { search?: string }) {
+  const listMyDeals = await listMyGamesService({
+    sold: "true",
+    page: 1,
+    limit: 30,
+    name: search,
+  });
 
   return (
     <>

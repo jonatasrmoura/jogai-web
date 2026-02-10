@@ -1,7 +1,27 @@
 import { api } from "../api";
 
-export async function listMyFavoritesGamesService() {
-  const games = await api<ListGamesResponse>(`/games/favorites`, {
+type QueryListMyFavoriteGameService = {
+  page: number;
+  limit: number;
+  name?: string;
+  platform?: string;
+  condition?: string;
+  isDigital?: boolean;
+  genreUuid?: string;
+};
+
+export async function listMyFavoritesGamesService(
+  props: QueryListMyFavoriteGameService,
+) {
+  const query = `page=${props.page}&limit=${props.limit}&name=${
+    props.name || ""
+  }&platform=${props.platform || ""}&condition=${
+    props.condition || ""
+  }&isDigital=${props.isDigital ? "true" : "false"}&genreUuid=${
+    props.genreUuid || ""
+  }`;
+
+  const games = await api<ListGamesResponse>(`/games/favorites?${query}`, {
     method: "GET",
   });
 

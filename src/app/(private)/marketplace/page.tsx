@@ -60,13 +60,13 @@ export default async function MarketplacePage({
       </div>
 
       {defaultUrl === "my-games" ? (
-        <ListMyGames />
+        <ListMyGames search={searchTerm} />
       ) : defaultUrl === "explore" ? (
         <ListGamesExplore search={searchTerm} />
       ) : defaultUrl === "my-deals" ? (
-        <ListMyDeals />
+        <ListMyDeals search={searchTerm} />
       ) : defaultUrl === "wishlist" ? (
-        <ListMyFavoritesGames />
+        <ListMyFavoritesGames search={searchTerm} />
       ) : null}
     </main>
   );
