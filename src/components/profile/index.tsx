@@ -1,6 +1,6 @@
 "use client";
 
-import { useContext, useState } from "react";
+import Link from "next/link";
 import { Calendar, User, AtSign, Info, CalendarDays } from "lucide-react";
 import Image from "next/image";
 import { format } from "date-fns";
@@ -11,54 +11,17 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import type { ShowUserDTO } from "../../types/users/show-user.dto";
 import { NoAvatarProfile } from "../no-avatar-profile";
-import { updateAvatarService } from "../../services/user-auth/update-avatar.service";
-import { errorMessage } from "../../lib/messages/error-message";
-import { successMessage } from "../../lib/messages/success-message";
-import { AuthContext } from "../../contexts/auth-context";
 
 interface ProfileProps {
   user: ShowUserDTO;
 }
 
 export default function Profile({ user }: ProfileProps) {
-  const { setUserIsUpdate } = useContext(AuthContext);
-  const [preview, setPreview] = useState<string | null>(null);
-  // const [avatarFile, setAvatarFile] = useState<File | null>(null);
-
   const formattedJoinedDate = format(
     new Date(user.createdAt),
     "MMMM 'de' yyyy",
     { locale: ptBR },
   );
-
-  async function handleFileChange(event: React.ChangeEvent<HTMLInputElement>) {
-    const formData = new FormData();
-    const selectedFiles = event.target.files;
-
-    if (!selectedFiles) return;
-
-    const fileSelected = selectedFiles[0];
-    const newPreview = URL.createObjectURL(fileSelected);
-
-    formData.append("file", fileSelected);
-
-    setPreview(newPreview);
-    // setAvatarFile(fileSelected);
-
-    const result = await updateAvatarService(formData);
-
-    console.log(result);
-
-    if (!result)
-      return errorMessage(
-        "Erro ao atualizado Avatar!",
-        "Verifique seu arquivo de imagem e tente novamente.",
-      );
-
-    setUserIsUpdate(true);
-
-    successMessage("Avatar atualizado com sucesso!", "");
-  }
 
   return (
     <div className="min-h-screen bg-zinc-50/50 dark:bg-zinc-950 p-4 md:p-8">
@@ -75,13 +38,13 @@ export default function Profile({ user }: ProfileProps) {
               {/* Avatar com Borda */}
               <div className="relative group">
                 <div className="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-white dark:border-zinc-900 overflow-hidden shadow-2xl transition-transform duration-300 group-hover:scale-105">
-                  {preview || user?.avatarUrl ? (
+                  {user?.avatarUrl ? (
                     <label
                       htmlFor="edit-avatar"
                       className="w-full h-full cursor-pointer"
                     >
                       <Image
-                        src={preview || (user.avatarUrl as string)}
+                        src={user.avatarUrl}
                         alt={user.fullname}
                         fill
                         className="object-cover rounded-full"
@@ -96,13 +59,6 @@ export default function Profile({ user }: ProfileProps) {
                     </label>
                   )}
                 </div>
-                <input
-                  type="file"
-                  className="hidden"
-                  id="edit-avatar"
-                  onChange={handleFileChange}
-                  accept="image/*"
-                />
               </div>
 
               {/* Nome e Nickname */}
@@ -124,9 +80,16 @@ export default function Profile({ user }: ProfileProps) {
                 </p>
               </div>
 
-              <Button variant="outline" className="rounded-full px-6">
-                Editar Perfil
-              </Button>
+              <Link
+                href={{
+                  pathname: "/profile",
+                  query: { name: "edit-profile" },
+                }}
+              >
+                <Button variant="outline" className="rounded-full px-6">
+                  Editar Perfil
+                </Button>
+              </Link>
             </div>
 
             <hr className="my-8 border-zinc-200 dark:border-zinc-800" />

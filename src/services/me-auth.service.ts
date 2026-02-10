@@ -7,7 +7,7 @@ export async function meAuthService(): Promise<ShowUserDTO | false> {
     method: "GET",
     cache: "force-cache",
     next: {
-      tags: ["update-user-avatar"],
+      tags: ["update-user-avatar", "update-user-profile"],
     },
   });
 }
