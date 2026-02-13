@@ -63,10 +63,11 @@ export function AuthProvider({ children }: AuthProviderProps) {
           }
         })
         .finally(() => {
-          setLoading(false);
           setUserIsUpdate(false);
         });
     }
+
+    setLoading(false);
   }, [userIsUpdate]);
 
   async function handleLogout(): Promise<void> {
