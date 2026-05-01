@@ -3,7 +3,7 @@ import { useContext, useState } from "react";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
-import { ArrowBigLeftDash, Loader2, Plus } from "lucide-react";
+import { ArrowBigLeftDash, Loader2, Save, UploadCloud } from "lucide-react";
 
 import { InputLabel } from "../../inputs/input-label";
 import { TextAreaLabel } from "../../inputs/text-area-label";
@@ -54,21 +54,17 @@ export function UpdateProfileForm({
     const newPreview = URL.createObjectURL(fileSelected);
 
     formData.append("file", fileSelected);
-
     setPreview(newPreview);
 
     const result = await updateAvatarService(formData);
 
-    console.log(result);
-
     if (!result)
       return errorMessage(
-        "Erro ao atualizado Avatar!",
+        "Erro ao atualizar Avatar!",
         "Verifique seu arquivo de imagem e tente novamente.",
       );
 
     setUserIsUpdate(true);
-
     successMessage("Avatar atualizado com sucesso!", "");
   }
 
@@ -89,92 +85,118 @@ export function UpdateProfileForm({
   }
 
   return (
-    <main className="h-[75vh] flex flex-col gap-4 items-center">
-      {/* Avatar com Borda */}
-      <div className="relative group mb-5">
-        <div className="w-32 h-32 md:w-40 md:h-40 rounded-full border-4 border-white dark:border-zinc-900 overflow-hidden shadow-2xl transition-transform duration-300 group-hover:scale-125">
-          {preview || avatarUrl ? (
-            <label
-              htmlFor="edit-avatar"
-              className="w-full h-full cursor-pointer"
-            >
+    <div className="w-full bg-card border border-border shadow-sm rounded-3xl p-6 md:p-10 flex flex-col gap-8 items-center">
+      <div className="text-center space-y-1">
+        <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight text-foreground">
+          Editar Perfil
+        </h2>
+        <p className="text-muted-foreground text-sm">
+          Atualize sua foto e detalhes para a comunidade te conhecer melhor.
+        </p>
+      </div>
+
+      {/* Avatar Edit Área */}
+      <div className="relative group flex flex-col items-center">
+        <div className="relative w-32 h-32 md:w-40 md:h-40 rounded-full border-[6px] border-background bg-muted overflow-hidden shadow-lg transition-transform duration-300 group-hover:scale-105">
+          <label
+            htmlFor="edit-avatar"
+            className="w-full h-full cursor-pointer flex items-center justify-center relative z-10"
+            aria-label="Alterar foto de perfil"
+          >
+            {preview || avatarUrl ? (
               <Image
                 src={preview || (avatarUrl as string)}
-                alt={fullname}
+                alt="Sua foto de perfil"
                 fill
                 className="object-cover rounded-full"
               />
-            </label>
-          ) : (
-            <label
-              htmlFor="edit-avatar"
-              className="text-7xl w-full h-full cursor-pointer"
-            >
-              <NoAvatarProfile userName={fullname} />
-            </label>
-          )}
+            ) : (
+              <div className="text-5xl w-full h-full flex items-center justify-center">
+                <NoAvatarProfile userName={fullname} />
+              </div>
+            )}
+
+            {/* Overlay Escuro com Ícone no Hover */}
+            <div className="absolute inset-0 bg-background/60 opacity-0 group-hover:opacity-100 transition-opacity flex flex-col items-center justify-center text-foreground backdrop-blur-sm">
+              <UploadCloud className="w-8 h-8 mb-1" />
+              <span className="text-xs font-bold uppercase tracking-wider">
+                Alterar
+              </span>
+            </div>
+          </label>
         </div>
+
         <input
           type="file"
           className="hidden"
           id="edit-avatar"
           onChange={handleFileChange}
           accept="image/*"
+          aria-hidden="true"
         />
       </div>
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-full flex flex-col gap-4 justify-center items-center px-2"
+        className="w-full max-w-xl flex flex-col gap-6"
       >
-        <InputLabel
-          label="Nome completo"
-          type="text"
-          placeholder="Digite seu nome completo"
-          {...register("fullname")}
-        />
-        <InputLabel
-          label="Data de nascimento"
-          type="text"
-          placeholder="Digite sua data de nascimento"
-          {...register("birthday")}
-        />
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <InputLabel
+            label="Nome completo"
+            type="text"
+            placeholder="Ex: João Silva"
+            {...register("fullname")}
+          />
+          <InputLabel
+            label="Data de nascimento"
+            type="text"
+            placeholder="DD/MM/AAAA"
+            {...register("birthday")}
+          />
+        </div>
+
         <TextAreaLabel
           label="Biografia"
-          placeholder="Digite sua biografia"
+          placeholder="Fale um pouco sobre seus jogos favoritos, seu estilo de gameplay..."
           {...register("bio")}
         />
 
-        <div className="max-w-md w-full flex flex-col gap-4">
+        <div className="flex flex-col sm:flex-row gap-4 mt-4 pt-6 border-t border-border">
           <Button
-            className="w-full"
+            type="button"
+            variant="outline"
+            className="w-full sm:w-1/3 h-12 bg-background/50 border-border hover:bg-muted font-semibold"
+            onClick={() => router.push("/profile")}
+            aria-label="Cancelar edição e voltar ao perfil"
+          >
+            <ArrowBigLeftDash className="mr-2 w-5 h-5" />
+            Cancelar
+          </Button>
+
+          <Button
+            className="w-full sm:w-2/3 h-12 font-bold shadow-lg shadow-primary/20 hover:shadow-primary/40 transition-all"
             type="submit"
-            disabled={isSubmitting} // Desativa o botão durante o envio
+            disabled={isSubmitting}
+            aria-label={
+              isSubmitting
+                ? "Salvando informações do perfil"
+                : "Salvar alterações do perfil"
+            }
           >
             {isSubmitting ? (
               <>
-                <Loader2 className="mr-1 animate-spin" />
+                <Loader2 className="mr-2 w-5 h-5 animate-spin" />
                 Salvando perfil...
               </>
             ) : (
               <>
-                <Plus />
-                Salvar
+                <Save className="mr-2 w-5 h-5" />
+                Salvar Alterações
               </>
             )}
           </Button>
-
-          <Button
-            type="button"
-            variant="secondary"
-            className="bg-neutral-200"
-            onClick={() => router.push("/profile")}
-          >
-            <ArrowBigLeftDash />
-            Voltar
-          </Button>
         </div>
       </form>
-    </main>
+    </div>
   );
 }

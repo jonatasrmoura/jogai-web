@@ -12,11 +12,20 @@ export async function ListMyDeals({ search }: { search?: string }) {
   return (
     <>
       {!listMyDeals.length ? (
-        <p className="text-center mt-5 text-lg font-semibold">
-          Você não possui negociações
-        </p>
+        <div className="flex flex-col items-center justify-center p-12 mt-8 text-center border border-dashed border-border rounded-2xl bg-card/20">
+          <div className="w-16 h-16 rounded-full bg-muted/50 flex items-center justify-center mb-4">
+            <span className="text-2xl">🎮</span>
+          </div>
+          <h3 className="text-xl font-semibold text-foreground">
+            Nenhum jogo cadastrado
+          </h3>
+          <p className="text-muted-foreground mt-2 max-w-sm">
+            Você ainda não adicionou nenhum jogo à sua vitrine. Que tal começar
+            anunciando aquele jogo que está parado?
+          </p>
+        </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6 p-6 max-w-7xl mx-auto">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 pt-4 w-full">
           {listMyDeals.map((game) => (
             <MyGameDealCard
               key={game.uuid}

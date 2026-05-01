@@ -1,9 +1,16 @@
 import Image from "next/image";
+import Link from "next/link";
+import {
+  ShoppingCart,
+  ShieldCheck,
+  MessageCircle,
+  ChevronLeft,
+  Gamepad2,
+} from "lucide-react";
 
 import { Button } from "../../../../components/ui/button";
 import { api } from "../../../../services/api";
 import type { GetGameDetailsResponseDTO } from "../../../../types/games/get-game-details-response.dto";
-import { ArrowBigLeftDash, ArrowBigRightDash } from "lucide-react";
 import { FavoriteButton } from "../../../../components/buttons/favorite-button";
 import { NoAvatarProfile } from "../../../../components/no-avatar-profile";
 
@@ -17,158 +24,205 @@ export default async function GameDetailsPage({
   const game = await api<GetGameDetailsResponseDTO>(`/games/${uuid}`, {
     method: "GET",
     cache: "force-cache",
-    next: {
-      tags: ["toggle-favorite-game"],
-    },
+    next: { tags: ["toggle-favorite-game"] },
   });
 
   if (!game) {
-    return <div>Erro ao carregar os detalhes do jogo.</div>;
+    return (
+      <div className="flex min-h-[70vh] w-full flex-col items-center justify-center bg-background text-foreground gap-4">
+        <Gamepad2 className="w-12 h-12 text-muted-foreground animate-pulse" />
+        <p className="text-xl font-bold">
+          Anúncio não encontrado ou indisponível.
+        </p>
+        <Button asChild variant="outline">
+          <Link href="/marketplace" aria-label="Voltar para a vitrine">
+            Voltar para a Vitrine
+          </Link>
+        </Button>
+      </div>
+    );
   }
 
+  // Separando a primeira imagem (Hero) das restantes (Thumbnails)
+  const mainImage = game.images[0];
+  const thumbnails = game.images.slice(1);
+
   return (
-    /* CONTAINER PRINCIPAL
-       - Mobile: Fluxo normal (coluna)
-       - Desktop (md:): Flex Row, altura fixa da tela (100vh - header) para travar o layout e permitir scrolls internos
-    */
-    <div className="flex flex-col lg:flex-row lg:h-[calc(100vh-64px)] w-full overflow-hidden bg-white dark:bg-zinc-950">
-      {/* ASIDE: GALERIA DE IMAGENS
-          - Mobile: Scroll horizontal (flex-row + overflow-x-auto)
-          - Desktop (lg:): Coluna vertical, largura fixa (ex: 60%), scroll vertical
-      */}
-      {game.images.length > 2 && (
-        <div className="px-4 text-primary font-bold flex items-center justify-between lg:hidden">
-          <ArrowBigLeftDash />
-          Arraste para o lado
-          <ArrowBigRightDash />
-        </div>
-      )}
-      <aside
-        className="
-        w-full lg:w-[50%]
-        flex flex-row lg:flex-col 
-        overflow-x-auto lg:overflow-y-auto 
-        gap-4 p-4
-        bg-zinc-50 dark:bg-zinc-950
-        scrollbar-hide
-        snap-x lg:snap-none
-        border-r-2
-        border-primary
-      "
-      >
-        {game.images.map((image) => (
-          <div
-            key={image.url}
-            className="
-              /* MOBILE: Define largura baseada na tela e altura proporcional */
-              w-[250px]
-              h-[400px]
-              
-              /* DESKTOP: Altura fixa e largura total */
-              lg:w-[400px] 
-              lg:h-[600px] 
-              lg:aspect-auto
-              
-              relative 
-              self-end
-              shrink-0 
-              rounded-2xl 
-              overflow-hidden
-              bg-zinc-200 dark:bg-zinc-900
-              snap-center
-            "
+    <main className="min-h-screen bg-background text-foreground pb-24">
+      {/* Top Bar / Breadcrumb */}
+      <div className="border-b border-border bg-card/30">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-14 flex items-center">
+          <Link
+            href="/marketplace"
+            aria-label="Voltar para a página anterior"
+            className="flex items-center text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
           >
-            <Image
-              src={image.url}
-              alt={game.name}
-              fill
-              className="object-cover"
-              sizes="(max-width: 768px) 85vw, 65vw"
-              priority={image.position === 1}
-            />
+            <ChevronLeft className="w-4 h-4 mr-1" />
+            Voltar para a Vitrine
+          </Link>
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 md:pt-12">
+        <div className="flex flex-col lg:flex-row gap-12 items-start">
+          {/* LADO ESQUERDO: Galeria Visual e Descrição (60% do espaço) */}
+          <div className="w-full lg:w-[60%] flex flex-col gap-8">
+            {/* Galeria Premium */}
+            <div className="space-y-4">
+              {/* Imagem Principal Hero */}
+              <div className="relative w-full aspect-[4/3] md:aspect-video lg:aspect-[4/3] rounded-3xl overflow-hidden bg-muted border border-border shadow-sm group">
+                <Image
+                  src={mainImage.url}
+                  alt={`Capa principal do jogo ${game.name}`}
+                  fill
+                  className="object-cover transition-transform duration-700 group-hover:scale-105"
+                  sizes="(max-width: 768px) 100vw, 60vw"
+                  priority
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              </div>
+
+              {/* Miniaturas (Grid impecável em CSS) */}
+              {thumbnails.length > 0 && (
+                <div className="grid grid-cols-4 gap-3 md:gap-4">
+                  {thumbnails.map((image, index) => (
+                    <div
+                      key={image.url}
+                      className="relative w-full aspect-square rounded-2xl overflow-hidden bg-muted border border-border hover:border-primary/50 transition-colors cursor-pointer"
+                    >
+                      <Image
+                        src={image.url}
+                        alt={`Imagem detalhada ${index + 1} de ${game.name}`}
+                        fill
+                        className="object-cover hover:scale-110 transition-transform duration-500"
+                        sizes="(max-width: 768px) 25vw, 15vw"
+                      />
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+
+            {/* Descrição do Produto (Fica abaixo das imagens na leitura fluida) */}
+            <div className="mt-4 space-y-4">
+              <h2 className="font-bold text-2xl tracking-tight text-foreground">
+                Sobre o item
+              </h2>
+              <div className="prose prose-zinc dark:prose-invert max-w-none">
+                <p className="text-muted-foreground leading-relaxed text-lg whitespace-pre-wrap">
+                  {game.description}
+                </p>
+              </div>
+            </div>
           </div>
-        ))}
-      </aside>
 
-      {/* MAIN: DETALHES DO PRODUTO
-          - Desktop (md:): Scroll independente, largura fixa (ex: 40%)
-      */}
-      <main
-        className="
-        flex-1 
-        overflow-y-auto 
-        p-6 md:p-12
-        flex flex-col
-      "
-      >
-        <div className="max-w-xl mx-auto w-full space-y-8">
-          {/* Header do Jogo */}
-
-          <header className="space-y-2">
-            <div className="absolute top-173 right-80">
+          {/* LADO DIREITO: Buy Box Sticky (Gatilhos de Venda) (40% do espaço) */}
+          <aside className="w-full lg:w-[40%] sticky top-24 space-y-8">
+            {/* Caixa Principal de Ação */}
+            <div className="p-6 md:p-8 rounded-3xl bg-card border border-border shadow-xl shadow-primary/5 relative">
+              {/* Botão de Favoritar flutuando suavemente no topo */}
               <FavoriteButton
                 gameUuid={game.uuid}
                 gameName={game.name}
                 isFavorite={game.isFavorite}
+                className="absolute top-6 right-6"
               />
-            </div>
-            <div className="flex items-center gap-2 text-primary font-bold text-sm uppercase tracking-tighter">
-              <span>{game.platform}</span>
-              <span className="w-1 h-1 rounded-full bg-zinc-300" />
-              <span>
-                {game.condition === "NEW_SEALED" ? "Lacre Original" : "Usado"}
-              </span>
-            </div>
-            <h1 className="text-4xl font-black leading-none">{game.name}</h1>
-          </header>
 
-          {/* Seção do Vendedor */}
-          <div className="flex items-center gap-4 py-6 border-y border-zinc-100 dark:border-zinc-800">
-            {game.user.avatarUrl ? (
-              <Image
-                src={game.user.avatarUrl}
-                alt={game.user.fullname}
-                className="w-20 h-20 rounded-full border-2 border-primary p-0.5"
-                width={160}
-                height={160}
-              />
-            ) : (
-              <div className="w-20 h-20 text-3xl border-2 border-zinc-300 p-1 rounded-full">
-                <NoAvatarProfile userName={game.user.fullname} />
+              {/* Tags de Classificação */}
+              <div className="flex flex-wrap items-center gap-2 text-sm font-bold uppercase tracking-wider mb-4 pr-12">
+                <span className="text-primary bg-primary/10 px-3 py-1 rounded-full">
+                  {game.platform}
+                </span>
+                <span className="text-muted-foreground border border-border px-3 py-1 rounded-full">
+                  {game.condition === "NEW_SEALED" ? "Lacre Original" : "Usado"}
+                </span>
               </div>
-            )}
-            <div>
-              <p className="text-xs text-zinc-500 font-medium uppercase">
-                Anunciado por
-              </p>
-              <p className="font-bold text-zinc-900 dark:text-zinc-100">
-                {game.user.fullname}
-              </p>
-            </div>
-          </div>
 
-          {/* Descrição */}
-          <div className="space-y-4">
-            <h3 className="font-bold text-lg">Descrição do jogo</h3>
-            <p className="text-zinc-600 dark:text-zinc-400 leading-relaxed text-lg">
-              {game.description}
-            </p>
-          </div>
+              <h1 className="text-3xl md:text-4xl font-extrabold leading-tight tracking-tight mb-8">
+                {game.name}
+              </h1>
 
-          {/* Footer de Compra (Sticky no mobile, normal no desktop scrollable) */}
-          <div className="pt-10 mt-auto">
-            <div className="flex items-baseline gap-2 mb-4">
-              <span className="text-sm font-medium">R$</span>
-              <span className="text-5xl font-black text-primary">
-                {game.value.toFixed(2)}
-              </span>
+              {/* Área de Preço */}
+              <div className="space-y-6">
+                <div className="flex items-baseline gap-2">
+                  <span className="text-xl font-medium text-muted-foreground">
+                    R$
+                  </span>
+                  <span className="text-5xl font-black text-primary tracking-tighter">
+                    {game.value.toFixed(2)}
+                  </span>
+                </div>
+
+                <div className="flex flex-col gap-3">
+                  <Button
+                    className="w-full h-14 font-bold text-lg shadow-lg shadow-primary/25 hover:shadow-primary/40 hover:-translate-y-0.5 transition-all"
+                    aria-label={`Comprar ${game.name} por R$ ${game.value.toFixed(2)}`}
+                  >
+                    <ShoppingCart className="w-5 h-5 mr-2" />
+                    Comprar Agora
+                  </Button>
+
+                  <Button
+                    variant="outline"
+                    className="w-full h-14 font-semibold text-base bg-background/50 hover:bg-muted"
+                    aria-label="Enviar mensagem ao vendedor"
+                  >
+                    <MessageCircle className="w-5 h-5 mr-2 text-muted-foreground" />
+                    Fazer uma oferta
+                  </Button>
+                </div>
+              </div>
+
+              {/* Trust Badges (Garantia) */}
+              <div className="mt-8 pt-6 border-t border-border flex flex-col gap-3 text-sm text-muted-foreground">
+                <div className="flex items-center gap-3">
+                  <ShieldCheck className="w-5 h-5 text-emerald-500" />
+                  <span>
+                    <strong>Compra Garantida</strong> pelo Jogaí.
+                  </span>
+                </div>
+                <div className="flex items-center gap-3">
+                  <Gamepad2 className="w-5 h-5 text-indigo-500" />
+                  <span>
+                    Receba o jogo que esperava ou devolvemos seu dinheiro.
+                  </span>
+                </div>
+              </div>
             </div>
-            <div className="grid grid-cols-1">
-              <Button className="h-12 font-bold text-lg">Comprar</Button>
+
+            {/* Informações do Vendedor */}
+            <div
+              className="p-6 rounded-3xl bg-muted/30 border border-border hover:border-primary/30 transition-colors flex items-center justify-between group cursor-pointer"
+              aria-label={`Ver perfil do vendedor ${game.user.fullname}`}
+            >
+              <div className="flex items-center gap-4">
+                {game.user.avatarUrl ? (
+                  <Image
+                    src={game.user.avatarUrl}
+                    alt={`Avatar de ${game.user.fullname}`}
+                    className="w-14 h-14 rounded-full object-cover shadow-sm group-hover:scale-105 transition-transform"
+                    width={56}
+                    height={56}
+                  />
+                ) : (
+                  <div className="w-14 h-14 text-lg border border-border flex items-center justify-center rounded-full bg-background shadow-sm group-hover:scale-105 transition-transform">
+                    <NoAvatarProfile userName={game.user.fullname} />
+                  </div>
+                )}
+                <div>
+                  <p className="text-xs text-muted-foreground font-semibold uppercase tracking-wider mb-0.5">
+                    Vendido por
+                  </p>
+                  <p className="font-bold text-foreground">
+                    {game.user.fullname}
+                  </p>
+                </div>
+              </div>
+              <ChevronLeft className="w-5 h-5 text-muted-foreground rotate-180 group-hover:text-primary transition-colors" />
             </div>
-          </div>
+          </aside>
         </div>
-      </main>
-    </div>
+      </div>
+    </main>
   );
 }

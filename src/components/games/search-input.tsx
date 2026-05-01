@@ -2,6 +2,7 @@
 
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useDebouncedCallback } from "use-debounce";
+import { Search } from "lucide-react";
 import { Input } from "../ui/input";
 
 export function SearchInput() {
@@ -9,28 +10,27 @@ export function SearchInput() {
   const pathname = usePathname();
   const { replace } = useRouter();
 
-  // Debounce evita que a cada letra digitada o banco seja consultado.
-  // Ele espera 300ms após o usuário parar de digitar.
   const handleSearch = useDebouncedCallback((term: string) => {
     const params = new URLSearchParams(searchParams);
-
     if (term) {
       params.set("search", term);
     } else {
       params.delete("search");
     }
-
-    // Atualiza a URL sem recarregar a página: /marketplace?name=explore&search=mario
     replace(`${pathname}?${params.toString()}`);
   }, 300);
 
   return (
-    <Input
-      className="m-5 lg:w-[25%]"
-      type="search"
-      placeholder="Search by name..."
-      onChange={(e) => handleSearch(e.target.value)}
-      defaultValue={searchParams.get("search")?.toString()}
-    />
+    <div className="relative w-full md:w-[300px]">
+      <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+      <Input
+        className="pl-9 bg-card/50 border-border h-10 w-full rounded-full"
+        type="search"
+        placeholder="Buscar jogos pelo nome..."
+        onChange={(e) => handleSearch(e.target.value)}
+        defaultValue={searchParams.get("search")?.toString()}
+        aria-label="Campo de busca de jogos"
+      />
+    </div>
   );
 }

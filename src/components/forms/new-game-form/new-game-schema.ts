@@ -5,13 +5,12 @@ export const newGameSchema = z.object({
   price: z.string().min(1, "O valor é obrigatório"),
   platform: z.string().min(1, "Escolha uma plataforma"),
   genresUuid: z
-    .array(z.uuidv7()) // Valida que é um array de strings no formato UUID
-    .min(1, "Selecione pelo menos um gênero para o jogo"), // Mensagem caso o array esteja vazio
+    .array(z.string().uuid()) // Usando o formato padrão do zod para uuid (versões compatíveis com v4 e v7)
+    .min(1, "Selecione pelo menos um gênero para o jogo"),
   condition: z.string().min(1, "Escolha a condição"),
   description: z
     .string()
     .min(10, "A descrição deve conter pelo menos 10 caracteres"),
-  // Aceita uma lista de arquivos, máximo 5
   files: z
     .custom<FileList>()
     .refine((files) => files?.length > 0, "A imagem do jogo é obrigatória")

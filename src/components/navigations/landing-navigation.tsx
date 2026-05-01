@@ -6,58 +6,68 @@ interface LandingNavigationProps {
 
 export function LandingNavigation({ defaultUrl }: LandingNavigationProps) {
   return (
-    <nav className="w-lg pr-10 md:max-w-md flex justify-start items-center text-center">
+    <nav
+      className="flex gap-6 overflow-x-auto scrollbar-hide w-full md:w-auto"
+      aria-label="Navegação da Vitrine"
+    >
       <Link
-        href={{
-          pathname: "/marketplace",
-          query: { name: "explore" },
-        }}
-        className={`w-full font-semibold py-3 ${
+        href={{ pathname: "/marketplace", query: { name: "explore" } }}
+        aria-label="Acessar aba Explorar Vitrine"
+        className={`whitespace-nowrap font-medium text-sm py-3 transition-colors relative ${
           defaultUrl === "explore"
-            ? "text-primary border-b-2 border-primary"
-            : "text-neutral-500 border-b border-primary/30 transition-all hover:opacity-85"
+            ? "text-primary"
+            : "text-muted-foreground hover:text-foreground"
         }`}
       >
-        Explore
+        Explorar
+        {defaultUrl === "explore" && (
+          <span className="absolute bottom-[-5px] left-0 w-full h-[2px] bg-primary rounded-t-full" />
+        )}
       </Link>
+
       <Link
-        href={{
-          pathname: "/marketplace",
-          query: { name: "wishlist" },
-        }}
-        className={`w-full font-semibold py-3 ${
+        href={{ pathname: "/marketplace", query: { name: "wishlist" } }}
+        aria-label="Acessar aba Meus Favoritos"
+        className={`whitespace-nowrap font-medium text-sm py-3 transition-colors relative ${
           defaultUrl === "wishlist"
-            ? "text-primary border-b-2 border-primary"
-            : "text-neutral-500 border-b border-primary/30 transition-all hover:opacity-85"
+            ? "text-primary"
+            : "text-muted-foreground hover:text-foreground"
         }`}
       >
-        My Wishlist
+        Meus Favoritos
+        {defaultUrl === "wishlist" && (
+          <span className="absolute bottom-[-5px] left-0 w-full h-[2px] bg-primary rounded-t-full" />
+        )}
       </Link>
+
       <Link
-        href={{
-          pathname: "/marketplace",
-          query: { name: "my-games" },
-        }}
-        className={`w-full font-semibold py-3 ${
+        href={{ pathname: "/marketplace", query: { name: "my-games" } }}
+        aria-label="Acessar aba Meus Jogos"
+        className={`whitespace-nowrap font-medium text-sm py-3 transition-colors relative ${
           defaultUrl === "my-games"
-            ? "text-primary border-b-2 border-primary"
-            : "text-neutral-500 border-b border-primary/30 transition-all hover:opacity-85"
+            ? "text-primary"
+            : "text-muted-foreground hover:text-foreground"
         }`}
       >
-        My Games
+        Meus Jogos
+        {defaultUrl === "my-games" && (
+          <span className="absolute bottom-[-5px] left-0 w-full h-[2px] bg-primary rounded-t-full" />
+        )}
       </Link>
+
       <Link
-        href={{
-          pathname: "/marketplace",
-          query: { name: "my-deals" },
-        }}
-        className={`w-full font-semibold py-3 ${
+        href={{ pathname: "/marketplace", query: { name: "my-deals" } }}
+        aria-label="Acessar aba Minhas Negociações"
+        className={`whitespace-nowrap font-medium text-sm py-3 transition-colors relative ${
           defaultUrl === "my-deals"
-            ? "text-primary border-b-2 border-primary"
-            : "text-neutral-500 border-b border-primary/30 transition-all hover:opacity-85"
+            ? "text-primary"
+            : "text-muted-foreground hover:text-foreground"
         }`}
       >
-        My Deals
+        Minhas Negociações
+        {defaultUrl === "my-deals" && (
+          <span className="absolute bottom-[-5px] left-0 w-full h-[2px] bg-primary rounded-t-full" />
+        )}
       </Link>
     </nav>
   );

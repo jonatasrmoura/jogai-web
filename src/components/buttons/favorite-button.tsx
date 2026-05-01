@@ -1,8 +1,9 @@
 "use client";
 
+import { useState } from "react";
 import { Heart } from "lucide-react";
+import { cn } from "@/lib/utils";
 
-import { Button } from "../ui/button";
 import { toggleFavoriteGameService } from "../../services/games/toggle-favorite-game.service";
 import { errorMessage } from "../../lib/messages/error-message";
 import { successMessage } from "../../lib/messages/success-message";
@@ -11,38 +12,83 @@ interface FavoriteButtonProps {
   gameName: string;
   gameUuid: string;
   isFavorite: boolean;
+  className?: string; // Permite que o componente pai ajuste a posição se necessário
 }
 
 export function FavoriteButton({
   gameUuid,
   gameName,
-  isFavorite,
+  isFavorite: initialIsFavorite,
+  className,
 }: FavoriteButtonProps) {
-  const handleSetFavoriteGame = async () => {
-    const isFavorited = await toggleFavoriteGameService(gameUuid);
+  // Controle de estado local para resposta visual imediata (Optimistic UI)
+  const [isFavorite, setIsFavorite] = useState(initialIsFavorite);
+  const [isLoading, setIsLoading] = useState(false);
 
-    if (!isFavorited)
-      return errorMessage("Erro ao favoritar jogo", "Jogo inválido!");
+  const handleSetFavoriteGame = async (e: React.MouseEvent) => {
+    // Impede que o clique no coração ative o Link do Card que está por baixo dele
+    e.preventDefault();
+    e.stopPropagation();
 
-    if (isFavorited.favorited === true)
-      return successMessage(
-        "Jogo favoritado!",
-        `${gameName} adicionado aos favoritos!`,
-      );
+    if (isLoading) return;
+
+    // Atualiza a interface na mesma hora para o usuário sentir o clique fluido
+    setIsFavorite(!isFavorite);
+    setIsLoading(true);
+
+    try {
+      const result = await toggleFavoriteGameService(gameUuid);
+
+      if (!result) {
+        // Se a API falhar, desfazemos a animação do coração
+        setIsFavorite(isFavorite);
+        return errorMessage(
+          "Erro",
+          "Não foi possível atualizar os favoritos no momento.",
+        );
+      }
+
+      // Mensagem de sucesso apenas se o jogo foi ADICIONADO aos favoritos
+      if (result.favorited === true) {
+        successMessage(
+          "Na Lista de Desejos!",
+          `${gameName} foi adicionado aos favoritos.`,
+        );
+      }
+    } catch {
+      setIsFavorite(isFavorite);
+      errorMessage("Erro de conexão", "Tente novamente mais tarde.");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
-    <Button
+    <button
       type="button"
       onClick={handleSetFavoriteGame}
-      className={`relative top-18 left-2 z-50 ${
-        isFavorite ? "bg-primary" : "bg-white"
-      } rounded-full p-[6px] shadow-md hover:scale-105 transition`}
+      disabled={isLoading}
+      aria-label={
+        isFavorite
+          ? `Remover ${gameName} dos favoritos`
+          : `Adicionar ${gameName} aos favoritos`
+      }
+      className={cn(
+        "absolute top-3 right-3 z-20 p-2.5 rounded-full backdrop-blur-md transition-all duration-300 hover:scale-110",
+        isFavorite
+          ? "bg-primary text-primary-foreground shadow-[0_0_15px_rgba(79,70,229,0.4)]"
+          : "bg-background/60 text-muted-foreground hover:text-foreground hover:bg-background/90 border border-border/50",
+        className,
+      )}
     >
       <Heart
-        size={18}
-        className={`${isFavorite ? "text-white" : "text-gray-500"}`}
+        className={cn(
+          "w-4 h-4 transition-all duration-300",
+          isFavorite ? "scale-110" : "scale-100",
+        )}
+        // O pulo do gato: preenche o coração se for favorito
+        fill={isFavorite ? "currentColor" : "none"}
       />
-    </Button>
+    </button>
   );
 }
