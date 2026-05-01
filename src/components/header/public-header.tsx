@@ -5,52 +5,51 @@ import { JogaiIcon } from "../icons/jogai-icon";
 
 export function PublicHeader() {
   return (
-    <header className="w-full bg-secondary">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-md">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
-        <JogaiIcon />
+        <Link
+          href="/"
+          className="flex items-center gap-2 hover:opacity-80 transition-opacity"
+        >
+          <JogaiIcon />
+        </Link>
 
         {/* Navegação */}
-        <nav className="hidden gap-6 md:flex">
+        <nav className="hidden gap-8 md:flex">
           <Link
-            href="/about"
-            className="text-gray-600 transition-colors hover:text-primary"
+            href="/sobre"
+            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
-            About
+            Sobre nós
           </Link>
           <Link
-            href="/terms"
-            className="text-gray-600 transition-colors hover:text-primary"
+            href="/termos"
+            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
-            Terms
+            Termos de Uso
           </Link>
           <Link
-            href="/contact"
-            className="text-gray-600 transition-colors hover:text-primary"
+            href="/contato"
+            className="text-sm font-medium text-muted-foreground transition-colors hover:text-foreground"
           >
-            Contact
+            Contato
           </Link>
         </nav>
 
         {/* Ações */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           <Link
-            href={{
-              pathname: "/login",
-              query: { name: "sign-in" },
-            }}
-            className="bg-gray-200 rounded-md px-4 py-2 text-sm font-medium text-gray-700 hover:text-primary"
+            href={{ pathname: "/login", query: { name: "sign-in" } }}
+            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
           >
-            Login
+            Entrar
           </Link>
           <Link
-            href={{
-              pathname: "/login",
-              query: { name: "sign-up" },
-            }}
-            className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-secondary transition-opacity hover:opacity-85"
+            href={{ pathname: "/login", query: { name: "sign-up" } }}
+            className="rounded-full bg-primary px-5 py-2 text-sm font-medium text-primary-foreground shadow-sm transition-all hover:opacity-90 hover:shadow-[0_0_15px_rgba(79,70,229,0.4)]"
           >
-            Register
+            Criar Conta
           </Link>
         </div>
       </div>

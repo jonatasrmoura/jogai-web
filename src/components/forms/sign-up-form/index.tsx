@@ -133,6 +133,7 @@ export function RegisterForm() {
           className="w-full h-11 font-medium"
           type="submit"
           disabled={isSubmitting}
+          aria-label="Criar conta e entrar"
         >
           {isSubmitting ? "Criando conta..." : "Criar conta e entrar"}
         </Button>

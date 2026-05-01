@@ -39,7 +39,7 @@ export function SignInForm() {
         <div className="flex flex-col items-start gap-1.5">
           <Input
             placeholder="E-mail"
-            className="h-11 bg-background/50"
+            className="bg-background/50"
             {...register("email")}
           />
           {errors?.email?.message && (
@@ -51,7 +51,7 @@ export function SignInForm() {
           <Input
             placeholder="Senha"
             type="password"
-            className="h-11 bg-background/50"
+            className="bg-background/50"
             {...register("password")}
           />
           {errors?.password?.message && (
@@ -64,6 +64,7 @@ export function SignInForm() {
         <Link
           href="/forgot-password"
           className="text-sm text-muted-foreground hover:text-primary transition-colors"
+          aria-label="Esqueceu a senha?"
         >
           Esqueceu a senha?
         </Link>
@@ -74,6 +75,7 @@ export function SignInForm() {
           className="w-full h-11 font-medium"
           type="submit"
           disabled={isSubmitting}
+          aria-label="Entrar na plataforma"
         >
           {isSubmitting ? "Entrando..." : "Entrar na plataforma"}
         </Button>
@@ -81,7 +83,7 @@ export function SignInForm() {
         {/* Divisor Premium */}
         <div className="relative my-2">
           <div className="absolute inset-0 flex items-center">
-            <span className="w-full border-t border-border/60" />
+            <span className="w-full border-t border-border" />
           </div>
           <div className="relative flex justify-center text-xs uppercase">
             <span className="bg-background px-2 text-muted-foreground">
@@ -92,11 +94,12 @@ export function SignInForm() {
 
         <Button
           variant="outline"
-          className="w-full h-11 bg-background/50"
+          className="w-full h-11 bg-background/50 border-border hover:bg-muted"
           type="button"
+          aria-label="Continuar com Google"
         >
           <svg className="mr-2 h-4 w-4" viewBox="0 0 24 24">
-            {/* Ícone simples do Google */}
+            {/* Ícones com cores da marca do Google (mantidas originais) */}
             <path
               d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
               fill="#4285F4"

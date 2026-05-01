@@ -6,7 +6,7 @@ import { refreshTokenService } from "./services/refresh-token.service";
 
 const publicRoutes = [
   { path: "/login", whenAuthenticated: "redirect" },
-  { path: "/home", whenAuthenticated: "next" },
+  { path: "/", whenAuthenticated: "next" },
   { path: "/pricing", whenAuthenticated: "next" },
 ] as const;
 

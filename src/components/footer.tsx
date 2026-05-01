@@ -3,46 +3,48 @@ import { JogaiIcon } from "./icons/jogai-icon";
 
 export function Footer() {
   return (
-    <footer className="bg-border dark:bg-subtle-dark">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex flex-col items-center gap-6 text-center">
+    <footer className="w-full border-t border-border/40 bg-background mt-auto">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10 flex flex-col items-center gap-8 text-center">
         {/* Logo */}
-        <JogaiIcon />
+        <div className="opacity-80">
+          <JogaiIcon />
+        </div>
 
         {/* Links */}
-        <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-3 text-sm">
+        <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4 text-sm font-medium">
           <Link
-            href="#about"
-            className="text-foreground-light/80 dark:text-foreground-dark/80 hover:text-primary transition-colors"
+            href="/sobre"
+            className="text-muted-foreground hover:text-primary transition-colors"
           >
-            About
+            Sobre o Jogaí
           </Link>
           <Link
-            href="#terms-of-services"
-            className="text-foreground-light/80 dark:text-foreground-dark/80 hover:text-primary transition-colors"
+            href="/termos"
+            className="text-muted-foreground hover:text-primary transition-colors"
           >
-            Terms of Services
+            Termos de Serviço
           </Link>
           <Link
-            href="#privacy-policy"
-            className="text-foreground-light/80 dark:text-foreground-dark/80 hover:text-primary transition-colors"
+            href="/privacidade"
+            className="text-muted-foreground hover:text-primary transition-colors"
           >
-            Privacy Policy
+            Política de Privacidade
           </Link>
           <Link
-            href="#contact"
-            className="text-foreground-light/80 dark:text-foreground-dark/80 hover:text-primary transition-colors"
+            href="/contato"
+            className="text-muted-foreground hover:text-primary transition-colors"
           >
-            Contact
+            Fale Conosco
           </Link>
         </div>
 
-        {/* Divider */}
-        <div className="w-full h-px bg-foreground-light/10 dark:bg-foreground-dark/10"></div>
-
         {/* Copyright */}
-        <p className="text-xs sm:text-sm text-foreground-light/60 dark:text-foreground-dark/60">
-          © {new Date().getFullYear()} Jogaí. All rights reserved.
-        </p>
+        <div className="w-full flex flex-col items-center gap-4">
+          <div className="w-24 h-px bg-border"></div>
+          <p className="text-xs text-muted-foreground">
+            © {new Date().getFullYear()} Jogaí. Todos os direitos reservados.
+          </p>
+        </div>
       </div>
     </footer>
   );

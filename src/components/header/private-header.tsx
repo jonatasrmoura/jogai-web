@@ -7,40 +7,50 @@ import { NotificationsMenu } from "../drop-down/notifications-menu";
 
 export function PrivateHeader() {
   return (
-    <header className="w-full bg-secondary">
-      <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3">
+    <header className="sticky top-0 z-50 w-full border-b border-border/40 bg-background/80 backdrop-blur-md">
+      <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
         {/* Logo */}
-        <JogaiIcon />
+        <Link
+          href="/"
+          className="flex items-center hover:opacity-80 transition-opacity"
+        >
+          <JogaiIcon />
+        </Link>
 
         {/* Navegação interna */}
-        <nav className="hidden gap-6 md:flex">
-          <Link href="/" className="text-gray-700 hover:text-primary">
-            Home
+        <nav className="hidden gap-8 md:flex items-center">
+          <Link
+            href="/"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Início
           </Link>
           <Link
-            href={{
-              pathname: "/marketplace",
-              query: { name: "explore" },
-            }}
-            className="text-gray-700 hover:text-primary"
+            href={{ pathname: "/marketplace", query: { name: "explore" } }}
+            className="text-sm font-medium text-foreground hover:text-primary transition-colors"
           >
-            Explore
+            Vitrine
           </Link>
-          <Link href="/players" className="text-gray-700 hover:text-primary">
-            Players
+          <Link
+            href="/players"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Jogadores
           </Link>
-          <Link href="/community" className="text-gray-700 hover:text-primary">
-            Community
+          <Link
+            href="/community"
+            className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors"
+          >
+            Comunidade
           </Link>
         </nav>
 
         {/* Notificações + Avatar */}
-        <div className="flex items-center gap-4">
+        <div className="flex items-center gap-5">
           <NotificationsMenu />
-
-          <div className="relative">
-            <ProfileMenu />
-          </div>
+          <div className="h-6 w-px bg-border"></div>{" "}
+          {/* Divisor vertical charmoso */}
+          <ProfileMenu />
         </div>
       </div>
     </header>

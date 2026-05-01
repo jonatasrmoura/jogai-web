@@ -8,7 +8,7 @@ import {
   useState,
 } from "react";
 import { parseCookies } from "nookies";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 
 import { PrivateHeader } from "../components/header/private-header";
 import { PublicHeader } from "../components/header/public-header";
@@ -41,11 +41,14 @@ export const AuthContext = createContext({} as AuthContextData);
 
 export function AuthProvider({ children }: AuthProviderProps) {
   const router = useRouter();
+  const pathname = usePathname();
 
   const [user, setUser] = useState<ShowUserDTO | null>(null);
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [userIsUpdate, setUserIsUpdate] = useState<boolean>(true);
+
+  const isAuthPage = pathname === "/login";
 
   useEffect(() => {
     if (!userIsUpdate) return;
@@ -142,9 +145,15 @@ export function AuthProvider({ children }: AuthProviderProps) {
       }}
     >
       {loading ? (
-        <div className="font-bold text-2xl">Carregando...</div>
+        <div className="flex h-screen w-full items-center justify-center font-bold text-2xl text-primary">
+          Carregando...
+        </div>
       ) : (
-        <> {isAuthenticated ? <PrivateHeader /> : <PublicHeader />}</>
+        <>
+          {/* O Pulo do Gato: Só renderiza o header se NÃO for a página de login */}
+          {!isAuthPage &&
+            (isAuthenticated ? <PrivateHeader /> : <PublicHeader />)}
+        </>
       )}
       {children}
     </AuthContext.Provider>
