@@ -1,5 +1,4 @@
 import Link from "next/link";
-
 import { SignInForm } from "../../../components/forms/sign-in-form";
 import { RegisterForm } from "../../../components/forms/sign-up-form";
 
@@ -12,63 +11,48 @@ export default async function SignInPage({ searchParams }: LoginPageProps) {
   const currentUrl = params.name as "sign-up" | "sign-in" | undefined;
   const defaultUrl = !currentUrl ? "sign-in" : currentUrl;
 
+  const isSignIn = defaultUrl === "sign-in";
+
   return (
-    <section>
-      <div className="flex flex-col items-center justify-center text-center gap-4">
-        <div>
-          <h1 className="text-4xl font-bold">Welcome to Jogaí</h1>
-          <p>Trade, sell, or lend games with other players.</p>
+    <section className="min-h-screen flex items-center justify-center relative bg-neutral-50 dark:bg-neutral-950 p-4 overflow-hidden">
+      {/* Elementos decorativos de fundo para dar o aspecto premium */}
+      <div className="absolute top-[-10%] left-[-5%] w-[500px] h-[500px] bg-primary/20 rounded-full blur-[120px] opacity-50 pointer-events-none" />
+      <div className="absolute bottom-[-10%] right-[-5%] w-[400px] h-[400px] bg-primary/10 rounded-full blur-[100px] opacity-50 pointer-events-none" />
+
+      <main className="w-full max-w-md bg-background/60 backdrop-blur-xl border border-border/50 rounded-2xl shadow-2xl p-8 relative z-10">
+        <div className="text-center mb-8 flex flex-col gap-2">
+          <h1 className="text-3xl font-extrabold tracking-tight">Jogaí</h1>
+          <p className="text-muted-foreground text-sm">
+            Compre, venda e troque jogos com a comunidade.
+          </p>
         </div>
 
-        <main className="w-full max-w-md p-2">
-          <div className="w-full flex justify-between">
-            <Link
-              href={{
-                pathname: "/login",
-                query: { name: "sign-in" },
-              }}
-              className={`w-full font-semibold py-3 rounded-l-lg ${
-                defaultUrl === "sign-in"
-                  ? "text-primary border-b-2 border-primary"
-                  : "text-neutral-500 border-b border-primary/30 transition-all hover:opacity-85"
-              }`}
-            >
-              Sign In
-            </Link>
-            <Link
-              href={{
-                pathname: "/login",
-                query: { name: "sign-up" },
-              }}
-              className={`w-full font-semibold py-3 rounded-r-lg ${
-                defaultUrl === "sign-up"
-                  ? "text-primary border-b-2 border-primary"
-                  : "text-neutral-500 border-b border-primary/30 transition-all hover:opacity-85"
-              }`}
-            >
-              Sign Up
-            </Link>
-          </div>
+        {/* Controle de Abas Premium */}
+        <div className="flex bg-muted/50 p-1 rounded-lg mb-8">
+          <Link
+            href={{ pathname: "/login", query: { name: "sign-in" } }}
+            className={`flex-1 text-center py-2.5 text-sm font-medium rounded-md transition-all duration-300 ${
+              isSignIn
+                ? "bg-background shadow-sm text-foreground"
+                : "text-muted-foreground hover:text-foreground hover:bg-background/50"
+            }`}
+          >
+            Entrar
+          </Link>
+          <Link
+            href={{ pathname: "/login", query: { name: "sign-up" } }}
+            className={`flex-1 text-center py-2.5 text-sm font-medium rounded-md transition-all duration-300 ${
+              !isSignIn
+                ? "bg-background shadow-sm text-foreground"
+                : "text-muted-foreground hover:text-foreground hover:bg-background/50"
+            }`}
+          >
+            Cadastrar
+          </Link>
+        </div>
 
-          <div className="mt-8">
-            {defaultUrl === "sign-up" ? (
-              <div className="grid grid-cols-1 gap-6">
-                <h2 className="font-bold text-2xl text-primary">
-                  Crie sua conta
-                </h2>
-                <RegisterForm />
-              </div>
-            ) : (
-              <div className="grid grid-cols-1 gap-6">
-                <h2 className="font-bold text-2xl text-primary">
-                  Entre na sua conta
-                </h2>
-                <SignInForm />
-              </div>
-            )}
-          </div>
-        </main>
-      </div>
+        <div>{isSignIn ? <SignInForm /> : <RegisterForm />}</div>
+      </main>
     </section>
   );
 }
