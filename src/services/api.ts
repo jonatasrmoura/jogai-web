@@ -1,36 +1,27 @@
-"use server";
-import { cookies } from "next/headers";
+import { parseCookies } from "nookies";
 import { signOut } from "../utils/sign-out";
+import { env } from "../env";
 
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL as string;
+const BASE_URL = env.NEXT_PUBLIC_API_BASE_URL;
 
-export async function api<T>(
-  url: string,
-  options?: RequestInit,
-): Promise<T | false> {
-  const cookieStore = await cookies();
-  const accessToken = cookieStore.get("jogai-app.token")?.value;
+export async function api<T>(url: string, options?: RequestInit): Promise<T> {
+  const cookies = parseCookies();
+  const accessToken = cookies["jogai-app.token"];
 
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 10000); // Timeout de 10 segundos
+  const timeoutId = setTimeout(() => controller.abort(), 10000);
 
   try {
     const isRequestFile = url.includes("/file");
-
     const isFormData = options?.body instanceof FormData;
 
     const response = await fetch(`${BASE_URL}${url}`, {
       ...options,
       signal: controller.signal,
       headers: {
-        // 1. Sempre envia o Authorization se houver token
         Authorization: accessToken ? `Bearer ${accessToken}` : "",
-
-        // 2. Só adiciona JSON se NÃO for FormData e NÃO for uma rota de arquivo
         ...(!isFormData &&
           !isRequestFile && { "Content-Type": "application/json" }),
-
-        // 3. Mantém outros headers caso você passe manualmente (exceto Content-Type se for FormData)
         ...(options?.headers || {}),
       },
     });
@@ -42,28 +33,35 @@ export async function api<T>(
         "Token inválido ou expirado. Redirecionando para o login...",
       );
 
-      // 👇 Só importa o SweetAlert no momento do erro e apenas no navegador
+      // 👇 O ESCUDO: Só executa se o código estiver rodando no navegador do usuário
       if (typeof window !== "undefined") {
-        const Swal = (await import("sweetalert2")).default;
-        Swal.fire({
-          title: "<strong>Sua sessão expirou</strong>",
-          icon: "info",
-          html: `Faça login novamente`,
-          confirmButtonText: `Ok`,
-        });
+        // Envolvemos a lógica numa função assíncrona auto-executável para não travar o fluxo
+        (async () => {
+          const Swal = (await import("sweetalert2")).default;
+          await Swal.fire({
+            title: "<strong>Sua sessão expirou</strong>",
+            icon: "info",
+            html: `Faça login novamente para continuar.`,
+            confirmButtonText: `Ok`,
+            confirmButtonColor: "var(--primary)",
+          });
+          signOut();
+        })();
       }
-      signOut();
+
       throw new Error("Sessão expirada. Faça login novamente.");
     }
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Erro na requisição");
+      const errorData = await response.json().catch(() => ({}));
+      // Lançamos o erro exato que o Fastify mandou (ex: "Nome já existe")
+      throw new Error(errorData.message || "Ocorreu um erro inesperado.");
     }
 
     return (await response.json()) as T;
-  } catch (e) {
-    console.error("Erro na requisição: " + e);
-    return false;
+  } catch (error: any) {
+    // Em vez de retornar false, deixamos o erro "estourar" para cima
+    // Assim, o catch do formulário pode pegar a mensagem e mostrar na tela!
+    throw error;
   }
 }

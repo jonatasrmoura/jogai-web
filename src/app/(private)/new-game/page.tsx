@@ -1,6 +1,8 @@
 import { NewGameForm } from "../../../components/forms/new-game-form/new-game-form";
 import { listGenresService } from "../../../services/genres/list-genres.service";
 
+export const dynamic = "force-dynamic";
+
 export default async function NewGamePage() {
   // Chamada à API para buscar as categorias
   const { data: listGenres } = await listGenresService({ limit: 50, page: 1 });

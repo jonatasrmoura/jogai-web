@@ -1,5 +1,4 @@
 import { setAccessTokenCookies } from "../config/cookies/auth/set-access-token-cookies";
-import { api } from "./api";
 
 type RefreshTokenRequest = {
   refreshToken: string;
@@ -12,14 +11,22 @@ type RefreshTokenResponse = {
 export async function refreshTokenService({
   refreshToken,
 }: RefreshTokenRequest): Promise<void> {
-  const responseApi = await api<RefreshTokenResponse>("/auth/refresh", {
+  const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
+
+  // 👇 Usamos o fetch nativo aqui para não contaminar o Edge Runtime com o SweetAlert
+  const response = await fetch(`${baseUrl}/auth/refresh`, {
     method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
     body: JSON.stringify({ refreshToken }),
   });
 
-  if (!responseApi) {
+  if (!response.ok) {
     throw new Error("Erro ao fazer refresh do token");
   }
 
-  setAccessTokenCookies(responseApi.accessToken);
+  const responseData = (await response.json()) as RefreshTokenResponse;
+
+  setAccessTokenCookies(responseData.accessToken);
 }

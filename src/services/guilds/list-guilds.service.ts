@@ -1,5 +1,3 @@
-import { env } from "../../env";
-
 export interface Guild {
   uuid: string;
   name: string;
@@ -17,30 +15,20 @@ interface FetchGuildsResponse {
   limit: number;
 }
 
+import { api } from "../api";
+
 export async function fetchGuilds(
   page = 1,
   limit = 10,
   search = "",
 ): Promise<FetchGuildsResponse> {
-  // Construindo a URL com os Query Params
-  const url = new URL(`${env.NEXT_PUBLIC_API_BASE_URL}/guilds`);
-  url.searchParams.append("page", String(page));
-  url.searchParams.append("limit", String(limit));
-
-  if (search) {
-    url.searchParams.append("search", search);
-  }
-
-  const response = await fetch(url.toString(), {
-    headers: {
-      // Supondo que você tenha o token salvo nos cookies ou localStorage
-      Authorization: `Bearer ${localStorage.getItem("jogai_token")}`,
-    },
+  const url = new URLSearchParams({
+    page: String(page),
+    limit: String(limit),
   });
 
-  if (!response.ok) {
-    throw new Error("Erro ao buscar guildas");
-  }
+  if (search) url.append("search", search);
 
-  return response.json();
+  // Limpo, direto e tipado!
+  return api<FetchGuildsResponse>(`/guilds?${url.toString()}`);
 }
