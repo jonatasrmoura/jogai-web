@@ -1,116 +1,151 @@
 "use client";
 
 import { useState, useEffect, useRef, useCallback } from "react";
-import { Loader2 } from "lucide-react";
-import { GuildCard, type GuildCardProps } from "../cards/guild-card";
+import Link from "next/link";
+import Image from "next/image";
+import { Users, Shield } from "lucide-react";
+import {
+  fetchGuilds,
+  type Guild,
+} from "../../services/guilds/list-guilds.service";
 
-// MOCK: Simulando o Banco de Dados (Substitua depois pela chamada na sua API)
-const MOCK_DB: GuildCardProps[] = Array.from({ length: 45 }).map((_, i) => ({
-  uuid: `guild-${i}`,
-  name: `Guilda ${i + 1} - ${["Cavaleiros", "Lendas", "Espectros", "Caçadores"][i % 4]}`,
-  focus: [
-    "RPG & Souls-like",
-    "FPS Competitivo",
-    "Caçadores de Platina",
-    "Retrogames",
-  ][i % 4],
-  members: Math.floor(Math.random() * 500) + 10,
-  bannerUrl: `https://images.unsplash.com/photo-1542751371-adc38448a05e?q=80&w=600&auto=format&fit=crop&sig=${i}`, // Imagens aleatórias de games
-  emblemUrl: `https://images.unsplash.com/photo-1511512578047-dfb367046420?q=80&w=150&auto=format&fit=crop&sig=${i}`,
-}));
+interface GuildInfiniteListProps {
+  searchQuery?: string;
+}
 
-const ITEMS_PER_PAGE = 12;
-
-export function GuildInfiniteList() {
-  const [guilds, setGuilds] = useState<GuildCardProps[]>([]);
-  const [, setPage] = useState(1);
+export function GuildInfiniteList({
+  searchQuery = "",
+}: GuildInfiniteListProps) {
+  const [guilds, setGuilds] = useState<Guild[]>([]);
+  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(false);
   const [hasMore, setHasMore] = useState(true);
 
-  // Referência para o elemento invisível no final da lista
-  const observerTarget = useRef<HTMLDivElement>(null);
+  // Referência para o último elemento da lista
+  const observer = useRef<IntersectionObserver | null>(null);
 
-  // Função que simula o fetch na API
-  const fetchGuilds = useCallback(async (pageNumber: number) => {
-    setLoading(true);
-    // Simulando delay de rede de 800ms
-    await new Promise((resolve) => setTimeout(resolve, 800));
+  const lastGuildElementRef = useCallback(
+    (node: HTMLDivElement | null) => {
+      if (loading) return;
 
-    const startIndex = (pageNumber - 1) * ITEMS_PER_PAGE;
-    const endIndex = startIndex + ITEMS_PER_PAGE;
-    const newGuilds = MOCK_DB.slice(startIndex, endIndex);
+      // Desconecta o observador anterior
+      if (observer.current) observer.current.disconnect();
 
-    if (newGuilds.length === 0) {
-      setHasMore(false);
-    } else {
-      setGuilds((prev) => {
-        // O SEGREDO: Filtra os novos itens, garantindo que nenhum UUID que já está na tela seja adicionado de novo.
-        const uniqueNewGuilds = newGuilds.filter(
-          (newGuild) =>
-            !prev.some((existingGuild) => existingGuild.uuid === newGuild.uuid),
-        );
-        return [...prev, ...uniqueNewGuilds];
-      });
-    }
-    setLoading(false);
-  }, []);
-
-  // Dispara o fetch inicial
-  useEffect(() => {
-    fetchGuilds(1);
-  }, [fetchGuilds]);
-
-  // Lógica do Intersection Observer (Verifica se o scroll chegou no final)
-  useEffect(() => {
-    const target = observerTarget.current;
-    if (!target) return;
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (entries[0].isIntersecting && hasMore && !loading) {
-          setPage((prev) => {
-            const nextPage = prev + 1;
-            fetchGuilds(nextPage);
-            return nextPage;
-          });
+      // Cria um novo observador
+      observer.current = new IntersectionObserver((entries) => {
+        // Se o último elemento apareceu na tela e ainda tem mais itens para carregar
+        if (entries[0].isIntersecting && hasMore) {
+          setPage((prevPage) => prevPage + 1);
         }
-      },
-      { threshold: 0.1 }, // Dispara quando 10% do elemento invisível aparecer na tela
-    );
+      });
 
-    observer.observe(target);
-    return () => observer.unobserve(target);
-  }, [hasMore, loading, fetchGuilds]);
+      // Manda observar o novo nó final
+      if (node) observer.current.observe(node);
+    },
+    [loading, hasMore],
+  );
+
+  // Efeito para carregar os dados quando a página ou a busca mudam
+  useEffect(() => {
+    async function loadGuilds() {
+      try {
+        setLoading(true);
+        const response = await fetchGuilds(page, 10, searchQuery);
+
+        setGuilds((prev) => {
+          // Se for a página 1 (nova busca), substitui tudo. Se não, concatena.
+          if (page === 1) return response.data;
+          return [...prev, ...response.data];
+        });
+
+        // Verifica se a quantidade que voltou é menor que o limite, significando que acabou.
+        setHasMore(response.data.length === 10);
+      } catch (error) {
+        console.error("Falha ao carregar guildas:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadGuilds();
+  }, [page, searchQuery]);
+
+  // Se a busca mudar, resetamos a lista para a página 1
+  useEffect(() => {
+    setPage(1);
+    setGuilds([]);
+    setHasMore(true);
+  }, [searchQuery]);
 
   return (
-    <div className="flex flex-col gap-8 w-full">
-      {/* Grid de Guildas */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full">
-        {guilds.map((guild) => (
-          <GuildCard key={guild.uuid} {...guild} />
-        ))}
-      </div>
+    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      {guilds.map((guild, index) => {
+        // Verifica se é o último item do array para colocar a Ref do observador
+        const isLastElement = guilds.length === index + 1;
 
-      {/* Gatilho e Loader do Infinite Scroll */}
-      <div
-        ref={observerTarget}
-        className="w-full py-10 flex items-center justify-center text-muted-foreground"
-      >
-        {loading && (
-          <div className="flex flex-col items-center gap-2">
-            <Loader2 className="w-8 h-8 text-primary animate-spin" />
-            <span className="text-sm font-semibold tracking-wider uppercase">
-              Encontrando mais guildas...
-            </span>
+        return (
+          <div
+            key={guild.uuid}
+            ref={isLastElement ? lastGuildElementRef : null}
+            className="group flex flex-col bg-card border border-border rounded-2xl overflow-hidden hover:border-primary/50 hover:shadow-xl hover:shadow-primary/5 transition-all cursor-pointer"
+          >
+            <Link
+              href={`/guilds/${guild.uuid}`}
+              className="flex flex-col h-full"
+            >
+              {/* Header do Card (Banner) */}
+              <div className="h-24 bg-gradient-to-r from-muted to-muted/50 relative p-4 flex flex-col justify-end">
+                {guild.bannerUrl && (
+                  <Image
+                    src={guild.bannerUrl}
+                    alt={guild.name}
+                    fill // 👈 A mágica que substitui o w-full e h-full absolutos
+                    className="object-cover opacity-40 group-hover:opacity-60 transition-opacity"
+                  />
+                )}
+                <div className="relative z-10">
+                  <h3 className="font-bold text-lg text-foreground line-clamp-1">
+                    {guild.name}
+                  </h3>
+                  <span className="text-xs text-primary font-bold uppercase tracking-wider bg-primary/10 px-2 py-0.5 rounded backdrop-blur-sm inline-block mt-1">
+                    {guild.focus}
+                  </span>
+                </div>
+              </div>
+
+              {/* Corpo do Card */}
+              <div className="p-4 flex-1 flex flex-col justify-between gap-4">
+                <p className="text-sm text-muted-foreground line-clamp-2">
+                  {guild.description}
+                </p>
+
+                <div className="flex items-center justify-between pt-4 border-t border-border/50">
+                  <div className="flex items-center gap-1.5 text-sm font-semibold text-foreground">
+                    <Users className="w-4 h-4 text-muted-foreground" />
+                    {guild.membersCount}{" "}
+                    <span className="text-muted-foreground font-normal">
+                      membros
+                    </span>
+                  </div>
+                  <Shield className="w-4 h-4 text-muted-foreground opacity-50 group-hover:text-primary transition-colors" />
+                </div>
+              </div>
+            </Link>
           </div>
-        )}
+        );
+      })}
 
-        {!hasMore && !loading && guilds.length > 0 && (
-          <p className="text-sm font-medium">
-            Você explorou todas as Guildas disponíveis!
-          </p>
-        )}
-      </div>
+      {loading && (
+        <div className="col-span-full py-8 flex justify-center">
+          <div className="w-8 h-8 border-4 border-primary border-t-transparent rounded-full animate-spin" />
+        </div>
+      )}
+
+      {!hasMore && guilds.length > 0 && (
+        <div className="col-span-full py-8 text-center text-sm text-muted-foreground font-medium">
+          Fim da lista. Que tal fundar a sua própria guilda?
+        </div>
+      )}
     </div>
   );
 }

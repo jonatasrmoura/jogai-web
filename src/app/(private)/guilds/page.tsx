@@ -1,3 +1,5 @@
+"use client";
+import { useState } from "react";
 import { Search, Plus } from "lucide-react";
 import Link from "next/link";
 
@@ -6,6 +8,8 @@ import { Input } from "../../../components/ui/input";
 import { GuildInfiniteList } from "../../../components/guilds/guild-infinite-list";
 
 export default function GuildsPage() {
+  const [search, setSearch] = useState("");
+
   return (
     <main className="min-h-screen bg-background text-foreground pb-20">
       {/* Hero Section das Guildas */}
@@ -37,7 +41,8 @@ export default function GuildsPage() {
               <Input
                 className="pl-9 h-12 bg-background/50 border-border rounded-xl shadow-sm"
                 placeholder="Buscar guilda..."
-                aria-label="Buscar guilda por nome"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)} // Atualiza o estado
               />
             </div>
             <Button
@@ -56,7 +61,7 @@ export default function GuildsPage() {
 
       {/* Container da Lista de Scroll Infinito */}
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12">
-        <GuildInfiniteList />
+        <GuildInfiniteList searchQuery={search} />
       </section>
     </main>
   );
