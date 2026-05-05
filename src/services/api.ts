@@ -1,15 +1,26 @@
 import { parseCookies } from "nookies";
 import { signOut } from "../utils/sign-out";
-import { env } from "../env";
 
-const BASE_URL = env.NEXT_PUBLIC_API_BASE_URL;
+const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL as string;
 
 export async function api<T>(url: string, options?: RequestInit): Promise<T> {
-  const cookies = parseCookies();
-  const accessToken = cookies["jogai-app.token"];
+  let accessToken = "";
+
+  // 1. O "PULO DO GATO": Leitura inteligente de Cookies
+  if (typeof window === "undefined") {
+    // Se estiver rodando no SERVIDOR (Server Components)
+    // Usamos um import dinâmico para o Next.js não reclamar no front-end
+    const { cookies } = await import("next/headers");
+    const cookieStore = await cookies();
+    accessToken = cookieStore.get("jogai-app.token")?.value || "";
+  } else {
+    // Se estiver rodando no NAVEGADOR (Client Components)
+    const clientCookies = parseCookies();
+    accessToken = clientCookies["jogai-app.token"] || "";
+  }
 
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), 10000);
+  const timeoutId = setTimeout(() => controller.abort(), 10000); // Timeout de 10 segundos
 
   try {
     const isRequestFile = url.includes("/file");
@@ -29,13 +40,10 @@ export async function api<T>(url: string, options?: RequestInit): Promise<T> {
     clearTimeout(timeoutId);
 
     if (response.status === 401) {
-      console.warn(
-        "Token inválido ou expirado. Redirecionando para o login...",
-      );
+      console.warn("Token inválido ou expirado.");
 
-      // 👇 O ESCUDO: Só executa se o código estiver rodando no navegador do usuário
       if (typeof window !== "undefined") {
-        // Envolvemos a lógica numa função assíncrona auto-executável para não travar o fluxo
+        // COMPORTAMENTO NO NAVEGADOR: Pop-up e Logout
         (async () => {
           const Swal = (await import("sweetalert2")).default;
           await Swal.fire({
@@ -47,6 +55,10 @@ export async function api<T>(url: string, options?: RequestInit): Promise<T> {
           });
           signOut();
         })();
+      } else {
+        // COMPORTAMENTO NO SERVIDOR: Redirecionamento forçado para o login
+        const { redirect } = await import("next/navigation");
+        redirect("/login");
       }
 
       throw new Error("Sessão expirada. Faça login novamente.");
@@ -54,14 +66,11 @@ export async function api<T>(url: string, options?: RequestInit): Promise<T> {
 
     if (!response.ok) {
       const errorData = await response.json().catch(() => ({}));
-      // Lançamos o erro exato que o Fastify mandou (ex: "Nome já existe")
-      throw new Error(errorData.message || "Ocorreu um erro inesperado.");
+      throw new Error(errorData.message || "Erro na requisição");
     }
 
     return (await response.json()) as T;
   } catch (error: any) {
-    // Em vez de retornar false, deixamos o erro "estourar" para cima
-    // Assim, o catch do formulário pode pegar a mensagem e mostrar na tela!
     throw error;
   }
 }

@@ -2,10 +2,11 @@ export interface Guild {
   uuid: string;
   name: string;
   focus: string;
+  visibility: "PUBLIC" | "PRIVATE";
+  hasAccess: boolean;
+  description: string;
+  bannerUrl: string | null;
   membersCount: number;
-  description?: string;
-  bannerUrl?: string;
-  emblemUrl?: string;
 }
 
 interface FetchGuildsResponse {
