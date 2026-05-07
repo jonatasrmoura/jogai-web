@@ -1,9 +1,9 @@
 import { parseCookies } from "nookies";
 import { signOut } from "../utils/sign-out";
-
-const BASE_URL = process.env.NEXT_PUBLIC_API_BASE_URL as string;
+import { env } from "../env";
 
 export async function api<T>(url: string, options?: RequestInit): Promise<T> {
+  const BASE_URL = env.NEXT_PUBLIC_API_BASE_URL;
   let accessToken = "";
 
   // 1. O "PULO DO GATO": Leitura inteligente de Cookies
@@ -32,7 +32,8 @@ export async function api<T>(url: string, options?: RequestInit): Promise<T> {
       headers: {
         Authorization: accessToken ? `Bearer ${accessToken}` : "",
         ...(!isFormData &&
-          !isRequestFile && { "Content-Type": "application/json" }),
+          !isRequestFile &&
+          options?.body && { "Content-Type": "application/json" }),
         ...(options?.headers || {}),
       },
     });
@@ -71,6 +72,7 @@ export async function api<T>(url: string, options?: RequestInit): Promise<T> {
 
     return (await response.json()) as T;
   } catch (error: any) {
+    console.warn("Aviso na API:", error.message);
     throw error;
   }
 }

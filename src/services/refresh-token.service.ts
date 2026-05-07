@@ -10,7 +10,7 @@ type RefreshTokenResponse = {
 
 export async function refreshTokenService({
   refreshToken,
-}: RefreshTokenRequest): Promise<void> {
+}: RefreshTokenRequest): Promise<RefreshTokenResponse> {
   const baseUrl = process.env.NEXT_PUBLIC_API_BASE_URL;
 
   // 👇 Usamos o fetch nativo aqui para não contaminar o Edge Runtime com o SweetAlert
@@ -29,4 +29,5 @@ export async function refreshTokenService({
   const responseData = (await response.json()) as RefreshTokenResponse;
 
   setAccessTokenCookies(responseData.accessToken);
+  return responseData;
 }
