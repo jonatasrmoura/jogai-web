@@ -16,7 +16,7 @@ const robotoMono = Roboto_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Jogaí | A sua plataforma gamer",
+  title: "Jogaí | A sua plataforma nerd",
   description:
     "Plataforma definitiva para negociar, trocar e organizar sua biblioteca de jogos.",
 };

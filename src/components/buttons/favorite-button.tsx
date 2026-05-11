@@ -4,20 +4,20 @@ import { useState } from "react";
 import { Heart } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-import { toggleFavoriteGameService } from "../../services/games/toggle-favorite-game.service";
+import { toggleFavoriteProductService } from "../../services/products/toggle-favorite-product.service";
 import { errorMessage } from "../../lib/messages/error-message";
 import { successMessage } from "../../lib/messages/success-message";
 
 interface FavoriteButtonProps {
-  gameName: string;
-  gameUuid: string;
+  productName: string;
+  productUuid: string;
   isFavorite: boolean;
   className?: string; // Permite que o componente pai ajuste a posição se necessário
 }
 
 export function FavoriteButton({
-  gameUuid,
-  gameName,
+  productUuid,
+  productName,
   isFavorite: initialIsFavorite,
   className,
 }: FavoriteButtonProps) {
@@ -25,7 +25,7 @@ export function FavoriteButton({
   const [isFavorite, setIsFavorite] = useState(initialIsFavorite);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSetFavoriteGame = async (e: React.MouseEvent) => {
+  const handleSetFavoriteProduct = async (e: React.MouseEvent) => {
     // Impede que o clique no coração ative o Link do Card que está por baixo dele
     e.preventDefault();
     e.stopPropagation();
@@ -37,7 +37,7 @@ export function FavoriteButton({
     setIsLoading(true);
 
     try {
-      const result = await toggleFavoriteGameService(gameUuid);
+      const result = await toggleFavoriteProductService(productUuid);
 
       if (!result) {
         // Se a API falhar, desfazemos a animação do coração
@@ -52,7 +52,7 @@ export function FavoriteButton({
       if (result.favorited === true) {
         successMessage(
           "Na Lista de Desejos!",
-          `${gameName} foi adicionado aos favoritos.`,
+          `${productName} foi adicionado aos favoritos.`,
         );
       }
     } catch {
@@ -66,12 +66,12 @@ export function FavoriteButton({
   return (
     <button
       type="button"
-      onClick={handleSetFavoriteGame}
+      onClick={handleSetFavoriteProduct}
       disabled={isLoading}
       aria-label={
         isFavorite
-          ? `Remover ${gameName} dos favoritos`
-          : `Adicionar ${gameName} aos favoritos`
+          ? `Remover ${productName} dos favoritos`
+          : `Adicionar ${productName} aos favoritos`
       }
       className={cn(
         "absolute top-3 right-3 z-20 p-2.5 rounded-full backdrop-blur-md transition-all duration-300 hover:scale-110",

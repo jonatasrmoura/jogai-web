@@ -1,25 +1,17 @@
-import { GameConditionEnum } from "../../enums/game-condition.enum";
+import { ProductConditionEnum } from "../../enums/product-condition.enum";
 
 export const listConditionMock = [
-  { value: GameConditionEnum.NEW_SEALED, label: "Novo / Lacrado" },
-  { value: GameConditionEnum.NEW_OPENED, label: "Novo (Aberto)" },
-  { value: GameConditionEnum.REFURBISHED, label: "Seminovo" },
-  { value: GameConditionEnum.USED_EXCELLENT, label: "Usado (Ótimo estado)" },
-  { value: GameConditionEnum.USED_GOOD, label: "Usado (Bom estado)" },
+  { value: ProductConditionEnum.NEW_OPENED, label: "Novo / Aberto" },
   {
-    value: GameConditionEnum.USED_LIGHT_SCRATCHES,
-    label: "Usado (Arranhões leves)",
+    value: ProductConditionEnum.DEFECTIVE_FOR_PARTS,
+    label: "Defeituoso (Apenas para peças)",
   },
+  { value: ProductConditionEnum.NEW_SEALED, label: "Novo / Lacrado" },
+  { value: ProductConditionEnum.NOT_APPLICABLE, label: "Não aplicável" },
+  { value: ProductConditionEnum.USED_EXCELLENT, label: "Usado (Ótimo estado)" },
+  { value: ProductConditionEnum.USED_GOOD, label: "Usado (Bom estado)" },
   {
-    value: GameConditionEnum.USED_FLAWED,
+    value: ProductConditionEnum.USED_FLAWED,
     label: "Usado (Arranhado / Pode falhar)",
-  },
-  {
-    value: GameConditionEnum.DEFECTIVE,
-    label: "Funcional, porém com defeitos",
-  },
-  {
-    value: GameConditionEnum.FOR_PARTS,
-    label: "Somente para peças / Não funciona",
   },
 ];

@@ -3,11 +3,11 @@ import { Plus } from "lucide-react";
 
 import { Button } from "../../../components/ui/button";
 import { LandingNavigation } from "../../../components/navigations/landing-navigation";
-import { ListMyGames } from "../../../components/games/list-my-games";
-import { ListGamesExplore } from "../../../components/games/list-games-explore";
-import { ListMyDeals } from "../../../components/games/list-my-deals";
-import { ListMyFavoritesGames } from "../../../components/games/list-my-favorites-games";
-import { SearchInput } from "../../../components/games/search-input";
+import { ListMyProducts } from "../../../components/products/list-my-products";
+import { ListProductsExplore } from "../../../components/products/list-products-explore";
+import { ListMyDeals } from "../../../components/products/list-my-deals";
+import { ListMyFavoritesProducts } from "../../../components/products/list-my-favorites-products";
+import { SearchInput } from "../../../components/products/search-input";
 
 import { meAuthService } from "../../../services/me-auth.service";
 
@@ -79,13 +79,13 @@ export default async function MarketplacePage({
       {/* Renderização Condicional das Listas */}
       <section className="min-h-[50vh]">
         {defaultUrl === "my-games" ? (
-          <ListMyGames search={searchTerm} />
+          <ListMyProducts search={searchTerm} />
         ) : defaultUrl === "explore" ? (
-          <ListGamesExplore search={searchTerm} />
+          <ListProductsExplore search={searchTerm} />
         ) : defaultUrl === "my-deals" ? (
           <ListMyDeals search={searchTerm} />
         ) : defaultUrl === "wishlist" ? (
-          <ListMyFavoritesGames search={searchTerm} />
+          <ListMyFavoritesProducts search={searchTerm} />
         ) : null}
       </section>
     </main>
