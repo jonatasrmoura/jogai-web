@@ -12,7 +12,7 @@ interface FavoriteButtonProps {
   productName: string;
   productUuid: string;
   isFavorite: boolean;
-  className?: string; // Permite que o componente pai ajuste a posição se necessário
+  className?: string;
 }
 
 export function FavoriteButton({
@@ -21,34 +21,37 @@ export function FavoriteButton({
   isFavorite: initialIsFavorite,
   className,
 }: FavoriteButtonProps) {
-  // Controle de estado local para resposta visual imediata (Optimistic UI)
   const [isFavorite, setIsFavorite] = useState(initialIsFavorite);
   const [isLoading, setIsLoading] = useState(false);
 
   const handleSetFavoriteProduct = async (e: React.MouseEvent) => {
-    // Impede que o clique no coração ative o Link do Card que está por baixo dele
     e.preventDefault();
     e.stopPropagation();
 
     if (isLoading) return;
 
-    // Atualiza a interface na mesma hora para o usuário sentir o clique fluido
-    setIsFavorite(!isFavorite);
+    // 1. Guarda o estado original antes da mudança
+    const previousState = isFavorite;
+
+    // 2. Optimistic UI: Muda a tela IMEDIATAMENTE (o coração enche ou esvazia)
+    setIsFavorite(!previousState);
     setIsLoading(true);
 
     try {
+      console.log("Toggling favorite for product:", productUuid);
       const result = await toggleFavoriteProductService(productUuid);
 
       if (!result) {
-        // Se a API falhar, desfazemos a animação do coração
-        setIsFavorite(isFavorite);
-        return errorMessage(
+        // Se a API falhar, restauramos o estado original que guardamos
+        setIsFavorite(previousState);
+        errorMessage(
           "Erro",
           "Não foi possível atualizar os favoritos no momento.",
         );
+        return; // Retorno para parar a execução
       }
 
-      // Mensagem de sucesso apenas se o jogo foi ADICIONADO aos favoritos
+      // Mensagem de sucesso apenas se o produto foi ADICIONADO aos favoritos
       if (result.favorited === true) {
         successMessage(
           "Na Lista de Desejos!",
@@ -56,7 +59,8 @@ export function FavoriteButton({
         );
       }
     } catch {
-      setIsFavorite(isFavorite);
+      // Se a conexão cair, também restauramos o estado original
+      setIsFavorite(previousState);
       errorMessage("Erro de conexão", "Tente novamente mais tarde.");
     } finally {
       setIsLoading(false);
@@ -86,7 +90,6 @@ export function FavoriteButton({
           "w-4 h-4 transition-all duration-300",
           isFavorite ? "scale-110" : "scale-100",
         )}
-        // O pulo do gato: preenche o coração se for favorito
         fill={isFavorite ? "currentColor" : "none"}
       />
     </button>

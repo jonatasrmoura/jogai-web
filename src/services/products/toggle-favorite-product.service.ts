@@ -7,19 +7,25 @@ import { ToggleFavoriteProductResponseDTO } from "../../types/products/toggle-fa
 export async function toggleFavoriteProductService(
   productUuid: string,
 ): Promise<ToggleFavoriteProductResponseDTO | null> {
-  const result = await api<ToggleFavoriteProductResponseDTO>(
-    `/products/${productUuid}/favorite`,
-    {
-      method: "POST",
-      body: JSON.stringify(null),
-    },
-  );
+  // 1. Envolvemos a chamada externa em um try/catch para proteger o Server Action
+  try {
+    const result = await api<ToggleFavoriteProductResponseDTO>(
+      `/products/${productUuid}/favorite`,
+      {
+        method: "POST",
+        body: JSON.stringify(null),
+      },
+    );
 
-  if (!result) {
+    if (!result) {
+      return null;
+    }
+
+    revalidateTag("toggle-favorite-product");
+
+    return { favorited: result.favorited, message: result.message };
+  } catch (error) {
+    console.error("🚨 Erro no Server Action (Favoritar):", error);
     return null;
   }
-
-  revalidateTag("toggle-favorite-product");
-
-  return { favorited: result.favorited, message: result.message };
 }

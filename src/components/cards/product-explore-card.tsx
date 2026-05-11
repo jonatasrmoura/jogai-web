@@ -4,19 +4,17 @@ import Image from "next/image";
 import { Card } from "@/components/ui/card";
 import { FavoriteButton } from "../buttons/favorite-button";
 
-// Atualizamos a tipagem para bater com o que vem da API,
-// pegando apenas o que o Card realmente precisa para renderizar.
 interface ProductExploreCardProps {
   uuid: string;
   id: number;
   name: string;
-  value: number; // Agora é number
+  value: number;
   images: {
     url: string;
     order: number;
     isPrimary: boolean;
-  }[]; // Agora é array
-  brandOrPlatform: string | null; // Novo nome
+  }[];
+  brandOrPlatform: string | null;
   isFavorite: boolean;
 }
 
@@ -28,8 +26,6 @@ export function ProductExploreCard({
   brandOrPlatform,
   isFavorite,
 }: ProductExploreCardProps) {
-  // Lógica 1: Formatação de Preço
-  // Se o valor for maior que 0, formata para R$ 0,00. Se não, é Negociável.
   const typeLabel =
     value > 0
       ? new Intl.NumberFormat("pt-BR", {
