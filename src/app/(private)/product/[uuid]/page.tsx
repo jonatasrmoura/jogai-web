@@ -6,6 +6,7 @@ import {
   MessageCircle,
   ChevronLeft,
   Gamepad2,
+  ImageIcon,
 } from "lucide-react";
 
 import { Button } from "../../../../components/ui/button";
@@ -43,9 +44,10 @@ export default async function ProductPage({
     );
   }
 
-  // Separando a primeira imagem (Hero) das restantes (Thumbnails)
-  const mainImage = product.images[0];
-  const thumbnails = product.images.slice(1);
+  // Tratamento seguro para arrays de imagens vazios
+  const hasImages = product.images && product.images.length > 0;
+  const mainImage = hasImages ? product.images[0] : null;
+  const thumbnails = hasImages ? product.images.slice(1) : [];
 
   return (
     <main className="min-h-screen bg-background text-foreground pb-24">
@@ -70,16 +72,25 @@ export default async function ProductPage({
             {/* Galeria Premium */}
             <div className="space-y-4">
               {/* Imagem Principal Hero */}
-              <div className="relative w-full aspect-[4/3] md:aspect-video lg:aspect-[4/3] rounded-3xl overflow-hidden bg-muted border border-border shadow-sm group">
-                <Image
-                  src={mainImage.url}
-                  alt={`Capa principal do produto ${product.name}`}
-                  fill
-                  className="object-cover transition-transform duration-700 group-hover:scale-105"
-                  sizes="(max-width: 768px) 100vw, 60vw"
-                  priority
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+              <div className="relative w-full aspect-[4/3] md:aspect-video lg:aspect-[4/3] rounded-3xl overflow-hidden bg-muted border border-border shadow-sm group flex items-center justify-center">
+                {mainImage ? (
+                  <>
+                    <Image
+                      src={mainImage.url}
+                      alt={`Capa principal do produto ${product.name}`}
+                      fill
+                      className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      sizes="(max-width: 768px) 100vw, 60vw"
+                      priority
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-background/40 to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                  </>
+                ) : (
+                  <div className="flex flex-col items-center text-muted-foreground">
+                    <ImageIcon className="w-12 h-12 mb-2 opacity-50" />
+                    <span>Sem imagem</span>
+                  </div>
+                )}
               </div>
 
               {/* Miniaturas (Grid impecável em CSS) */}
@@ -128,10 +139,10 @@ export default async function ProductPage({
                 className="absolute top-6 right-6"
               />
 
-              {/* Tags de Classificação */}
+              {/* Tags de Classificação (Corrigido para category.name) */}
               <div className="flex flex-wrap items-center gap-2 text-sm font-bold uppercase tracking-wider mb-4 pr-12">
                 <span className="text-primary bg-primary/10 px-3 py-1 rounded-full">
-                  {product.platform}
+                  {product.category.name}
                 </span>
                 <span className="text-muted-foreground border border-border px-3 py-1 rounded-full">
                   {product.condition === "NEW" ? "Lacre Original" : "Usado"}
@@ -184,29 +195,29 @@ export default async function ProductPage({
                 <div className="flex items-center gap-3">
                   <Gamepad2 className="w-5 h-5 text-indigo-500" />
                   <span>
-                    Receba o jogo que esperava ou devolvemos seu dinheiro.
+                    Receba o produto que esperava ou devolvemos seu dinheiro.
                   </span>
                 </div>
               </div>
             </div>
 
-            {/* Informações do Vendedor */}
+            {/* Informações do Vendedor (Corrigido user para seller) */}
             <div
               className="p-6 rounded-3xl bg-muted/30 border border-border hover:border-primary/30 transition-colors flex items-center justify-between group cursor-pointer"
-              aria-label={`Ver perfil do vendedor ${product.user.fullname}`}
+              aria-label={`Ver perfil do vendedor ${product.seller.fullname}`}
             >
               <div className="flex items-center gap-4">
-                {product.user.avatarUrl ? (
+                {product.seller.avatarUrl ? (
                   <Image
-                    src={product.user.avatarUrl}
-                    alt={`Avatar de ${product.user.fullname}`}
+                    src={product.seller.avatarUrl}
+                    alt={`Avatar de ${product.seller.fullname}`}
                     className="w-14 h-14 rounded-full object-cover shadow-sm group-hover:scale-105 transition-transform"
                     width={56}
                     height={56}
                   />
                 ) : (
                   <div className="w-14 h-14 text-lg border border-border flex items-center justify-center rounded-full bg-background shadow-sm group-hover:scale-105 transition-transform">
-                    <NoAvatarProfile userName={product.user.fullname} />
+                    <NoAvatarProfile userName={product.seller.fullname} />
                   </div>
                 )}
                 <div>
@@ -214,7 +225,7 @@ export default async function ProductPage({
                     Vendido por
                   </p>
                   <p className="font-bold text-foreground">
-                    {product.user.fullname}
+                    {product.seller.fullname}
                   </p>
                 </div>
               </div>

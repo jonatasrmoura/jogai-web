@@ -11,15 +11,23 @@ export interface GetProductDetailsResponseDTO {
   uuid: string;
   id: number;
   name: string;
-  platform: string;
+  brand: string;
+  model: string;
+  gtin: string | null;
+  attributes: Record<string, any> | null;
+  quantity: number;
   condition: ProductConditionEnum;
   isDigital: boolean;
-  isFavorite: boolean;
   value: number;
   description: string;
-  sold: boolean;
+  status: "AVAILABLE" | "RESERVED" | "SOLD" | "INACTIVE";
   createdAt: Date;
   updatedAt: Date | null;
-  user: ProductSellerDTO;
+  seller: ProductSellerDTO;
   images: ProductImageDTO[];
+  category: {
+    uuid: string;
+    name: string;
+  };
+  isFavorite: boolean;
 }
