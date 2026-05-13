@@ -1,18 +1,27 @@
 import type { ProductConditionEnum } from "../../enums/product-condition.enum";
-import type { ProductImageDTO } from "./product-image.dto";
 
 export interface CreateProductResponseDTO {
   uuid: string;
   id: number;
-  userUuid: string;
+  sellerUuid: string; // Atualizado (era userUuid)
   name: string;
-  platform: string;
+  brandOrPlatform: string; // Atualizado
   condition: ProductConditionEnum;
-  value: string;
+  value: string; // Postgres geralmente retorna decimais como string
   description: string;
   isDigital: boolean;
-  createdAt: Date;
-  updatedAt: Date | null;
-  deletedAt: Date | null;
-  images: ProductImageDTO[];
+  status: "AVAILABLE" | "RESERVED" | "SOLD" | "INACTIVE"; // Novo
+  createdAt: string; // Datas convertidas para string no JSON
+  updatedAt: string | null;
+  deletedAt: string | null;
+  category: {
+    uuid: string;
+    name: string;
+  };
+  images: {
+    uuid: string;
+    url: string;
+    isPrimary: boolean;
+    order: number;
+  }[];
 }

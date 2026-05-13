@@ -59,7 +59,7 @@ export default async function MarketplacePage({
           aria-label="Adicionar novo jogo para venda ou troca"
         >
           <Link
-            href="/new-game"
+            href="/product/new"
             aria-label="Ir para a página de anúncio de novo jogo"
           >
             <Plus className="mr-2 w-5 h-5" />

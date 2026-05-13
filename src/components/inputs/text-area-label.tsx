@@ -15,7 +15,7 @@ export function TextAreaLabel({
 }: InputLabelProps) {
   return (
     <>
-      <div className="grid w-full max-w-md items-center gap-3">
+      <div className="grid items-center gap-3">
         <Label htmlFor={id}>{label}</Label>
         <Textarea className="w-full h-32" {...rest} />
       </div>

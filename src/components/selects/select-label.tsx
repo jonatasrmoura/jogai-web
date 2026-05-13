@@ -31,7 +31,7 @@ export function SelectLabel({
 }: SelectLabelProps) {
   return (
     <>
-      <div className="grid w-full max-w-sm items-center gap-3">
+      <div className="grid w-full items-center gap-3">
         <Label>{label}</Label>
 
         <Controller
