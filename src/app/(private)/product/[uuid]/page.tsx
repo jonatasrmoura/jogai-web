@@ -134,9 +134,7 @@ export default async function ProductPage({
                   {product.platform}
                 </span>
                 <span className="text-muted-foreground border border-border px-3 py-1 rounded-full">
-                  {product.condition === "NEW_SEALED"
-                    ? "Lacre Original"
-                    : "Usado"}
+                  {product.condition === "NEW" ? "Lacre Original" : "Usado"}
                 </span>
               </div>
 
