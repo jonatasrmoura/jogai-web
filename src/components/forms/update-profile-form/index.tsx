@@ -9,7 +9,6 @@ import { InputLabel } from "../../inputs/input-label";
 import { TextAreaLabel } from "../../inputs/text-area-label";
 import { NoAvatarProfile } from "../../no-avatar-profile";
 import { AuthContext } from "../../../contexts/auth-context";
-import { updateAvatarService } from "../../../services/user-auth/update-avatar.service";
 import { errorMessage } from "../../../lib/messages/error-message";
 import { successMessage } from "../../../lib/messages/success-message";
 import { Button } from "../../ui/button";
@@ -26,7 +25,7 @@ export function UpdateProfileForm({
   bio,
   avatarUrl,
 }: UpdateProfileFormProps) {
-  const { setUserIsUpdate } = useContext(AuthContext);
+  const { handleUpdateAvatar, setUserIsUpdate } = useContext(AuthContext);
   const router = useRouter();
 
   const [preview, setPreview] = useState<string | null>(null);
@@ -56,16 +55,7 @@ export function UpdateProfileForm({
     formData.append("file", fileSelected);
     setPreview(newPreview);
 
-    const result = await updateAvatarService(formData);
-
-    if (!result)
-      return errorMessage(
-        "Erro ao atualizar Avatar!",
-        "Verifique seu arquivo de imagem e tente novamente.",
-      );
-
-    setUserIsUpdate(true);
-    successMessage("Avatar atualizado com sucesso!", "");
+    await handleUpdateAvatar(formData);
   }
 
   async function onSubmit(data: UpdateProfileFormProps) {

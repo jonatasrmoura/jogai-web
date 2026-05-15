@@ -23,6 +23,8 @@ import { setAccessTokenCookies } from "../config/cookies/auth/set-access-token-c
 import { errorMessage } from "../lib/messages/error-message";
 import { registerUserAuthService } from "../services/register-user-auth.service";
 import { destroyAccessTokenCookies } from "../config/cookies/auth/destroy-access-token-cookies";
+import { updateAvatarService } from "../services/user-auth/update-avatar.service";
+import { successMessage } from "../lib/messages/success-message";
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -31,10 +33,11 @@ interface AuthProviderProps {
 interface AuthContextData {
   user: ShowUserDTO | null;
   isAuthenticated: boolean;
+  setUserIsUpdate: Dispatch<SetStateAction<boolean>>;
   handleLogout(): Promise<void>;
   handleSignIn(email: string, password: string): Promise<void>;
   handleSignUp(data: RegisterUserAuthDTO): Promise<void>;
-  setUserIsUpdate: Dispatch<SetStateAction<boolean>>;
+  handleUpdateAvatar(data: FormData): Promise<void>;
 }
 
 export const AuthContext = createContext({} as AuthContextData);
@@ -81,30 +84,58 @@ export function AuthProvider({ children }: AuthProviderProps) {
     router.push("/login");
   }
 
+  async function handleUpdateAvatar(data: FormData) {
+    try {
+      const result = await updateAvatarService(data);
+
+      if (!result) {
+        return errorMessage(
+          "Erro ao atualizar Avatar!",
+          "Verifique seu arquivo de imagem e tente novamente.",
+        );
+      }
+
+      setUserIsUpdate(true);
+      successMessage("Avatar atualizado com sucesso!", "");
+    } catch (error: any) {
+      return errorMessage(
+        error.message || "Erro ao atualizar Avatar!",
+        "Verifique seu arquivo de imagem e tente novamente.",
+      );
+    }
+  }
+
   async function handleSignIn(email: string, password: string): Promise<void> {
-    const accessToken = await signInAuthService(email, password);
+    try {
+      const accessToken = await signInAuthService(email, password);
 
-    if (!accessToken) {
+      if (!accessToken) {
+        return errorMessage(
+          "Erro ao tentar fazer login",
+          "Credenciais inválidas",
+        );
+      }
+
+      setAccessTokenCookies(accessToken);
+
+      const userData = await meAuthService();
+
+      if (!userData) {
+        return errorMessage(
+          "Erro ao buscar dados do usuário",
+          "Tente tente fazer login novamente ou procure ajuda com o suporte.",
+        );
+      }
+
+      setUser(userData);
+      setIsAuthenticated(true);
+      router.push("/marketplace");
+    } catch (error: any) {
       return errorMessage(
-        "Erro ao tentar fazer login",
-        "Credenciais inválidas",
+        error.message || "Erro de login",
+        "Credenciais inválidas.",
       );
     }
-
-    setAccessTokenCookies(accessToken);
-
-    const userData = await meAuthService();
-
-    if (!userData) {
-      return errorMessage(
-        "Erro ao buscar dados do usuário",
-        "Tente tente fazer login novamente ou procure ajuda com o suporte.",
-      );
-    }
-
-    setUser(userData);
-    setIsAuthenticated(true);
-    router.push("/marketplace");
   }
 
   async function handleSignUp(data: RegisterUserAuthDTO): Promise<void> {
@@ -142,6 +173,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
         handleSignUp,
         handleLogout,
         setUserIsUpdate,
+        handleUpdateAvatar,
       }}
     >
       {loading ? (

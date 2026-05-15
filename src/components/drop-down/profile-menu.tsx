@@ -35,12 +35,12 @@ export function ProfileMenu() {
             <Image
               src={user.avatarUrl}
               alt={user.fullname || "User Avatar"}
-              className="h-12 w-12 rounded-full object-cover"
+              className="h-10 w-10 rounded-full object-cover"
               width={700}
               height={700}
             />
           ) : (
-            <div className="w-14 h-14 text-3xl">
+            <div className="w-10 h-10 text-2xl">
               <NoAvatarProfile userName={user.fullname} />
             </div>
           )}
