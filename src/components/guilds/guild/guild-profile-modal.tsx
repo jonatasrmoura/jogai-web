@@ -22,7 +22,7 @@ import {
   DropdownMenuTrigger,
 } from "../../ui/dropdown-menu";
 
-import type { GuildMember } from "../../../services/guilds/get-guild-details.service";
+import type { GuildMember } from "../../../types/guilds/guild-member";
 // import { updateMemberRole } from "../../../services/guilds/guild-actions.service";
 
 // IMPORTANTE: Ajuste os caminhos de importação para onde seus componentes realmente estão!

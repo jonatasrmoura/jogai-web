@@ -9,7 +9,6 @@ import { api } from "../../../../services/api";
 import {
   getGuildDetails,
   type GuildDetails,
-  type GuildMember,
 } from "../../../../services/guilds/get-guild-details.service";
 
 import { GuildHeader } from "../../../../components/guilds/guild/guild-header";
@@ -17,6 +16,7 @@ import { GuildSidebar } from "../../../../components/guilds/guild/guild-sidebar"
 import { GuildOffersFeed } from "../../../../components/guilds/guild/guild-offers-feed";
 import { GuildSettingsModal } from "../../../../components/guilds/guild/guild-settings-modal";
 import { GuildChat } from "../../../../components/guilds/guild/guild-chat";
+import { useGuildMembers } from "../../../../hooks/use-guild-members";
 
 export default function GuildTavernPage() {
   const params = useParams();
@@ -25,7 +25,6 @@ export default function GuildTavernPage() {
   const [activeView, setActiveView] = useState<"chat" | "offers">("chat");
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
-  // O Hook do WebSocket reage a eventos em tempo real
   const {
     messages,
     setMessages,
@@ -35,9 +34,9 @@ export default function GuildTavernPage() {
     sendTyping,
   } = useGuildChat(guildUuid);
 
+  const { members, totalMembers } = useGuildMembers(guildUuid, 1, 30, "");
+
   const [guildDetails, setGuildDetails] = useState<GuildDetails | null>(null);
-  const [guildMembers, setGuildMembers] = useState<GuildMember[]>([]);
-  const [totalMembers, setTotalMembers] = useState(0);
   const [hasPermission, setHasPermission] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -45,14 +44,12 @@ export default function GuildTavernPage() {
     async function loadTavernData() {
       try {
         setIsLoading(true);
-        const [chatResponse, detailsResponse] = await Promise.all([
+        const [{ messages }, { guild }] = await Promise.all([
           api<{ messages: any[] }>(`/guilds/${guildUuid}/messages`),
           getGuildDetails(guildUuid),
         ]);
-        setMessages(chatResponse.messages || []);
-        setGuildDetails(detailsResponse.guild);
-        setGuildMembers(detailsResponse.members);
-        setTotalMembers(detailsResponse.totalMembers);
+        setMessages(messages || []);
+        setGuildDetails(guild);
         setHasPermission(true);
       } catch (error: any) {
         if (error.message.includes("permissão")) setHasPermission(false);
@@ -69,14 +66,10 @@ export default function GuildTavernPage() {
         <GuildSidebar
           guildUuid={guildUuid}
           guildDetails={guildDetails}
-          guildMembers={guildMembers}
+          guildMembers={members}
           totalMembers={totalMembers}
           isConnected={isConnected}
           onOpenSettings={() => setIsSettingsOpen(true)}
-          onMemberKicked={(uuid) => {
-            setGuildMembers((prev) => prev.filter((m) => m.userUuid !== uuid));
-            setTotalMembers((prev) => prev - 1);
-          }}
         />
       )}
 

@@ -1,14 +1,5 @@
 import { api } from "../api";
 
-export interface GuildMember {
-  userUuid: string;
-  nickname: string;
-  avatarUrl: string | null;
-  roleName: string;
-  isAdmin: boolean;
-  joinedAt: string;
-}
-
 export interface GuildDetails {
   uuid: string;
   name: string;
@@ -23,8 +14,6 @@ export interface GuildDetails {
 
 export interface GetGuildDetailsResponse {
   guild: GuildDetails;
-  members: GuildMember[];
-  totalMembers: number;
 }
 
 export async function getGuildDetails(

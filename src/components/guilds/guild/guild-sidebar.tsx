@@ -13,10 +13,7 @@ import {
 } from "../../ui/dropdown-menu";
 import { Button } from "../../ui/button";
 
-import type {
-  GuildDetails,
-  GuildMember,
-} from "../../../services/guilds/get-guild-details.service";
+import type { GuildDetails } from "../../../services/guilds/get-guild-details.service";
 import {
   generateInviteLink,
   leaveGuild,
@@ -24,6 +21,7 @@ import {
 
 // Importando a lista de membros que isolamos!
 import { GuildMembersList } from "./guild-members-list";
+import type { GuildMember } from "../../../types/guilds/guild-member";
 
 interface GuildSidebarProps {
   guildUuid: string;
@@ -32,7 +30,7 @@ interface GuildSidebarProps {
   totalMembers: number;
   isConnected: boolean;
   onOpenSettings: () => void;
-  onMemberKicked: (uuid: string) => void;
+  // onMemberKicked: (uuid: string) => void;
 }
 
 export function GuildSidebar({
@@ -42,7 +40,7 @@ export function GuildSidebar({
   totalMembers,
   isConnected,
   onOpenSettings,
-  onMemberKicked,
+  // onMemberKicked,
 }: GuildSidebarProps) {
   // Lógica restaurada e funcionando!
   const handleLeaveGuild = async () => {
@@ -101,6 +99,7 @@ export function GuildSidebar({
             src={guildDetails.bannerUrl}
             alt={guildDetails.name}
             fill
+            priority // <--- ADICIONE ESTA PROPRIEDADE
             className="object-cover opacity-50"
           />
         )}
@@ -182,7 +181,7 @@ export function GuildSidebar({
       <GuildMembersList
         guildUuid={guildUuid}
         guildMembers={guildMembers}
-        onMemberKicked={onMemberKicked}
+        // onMemberKicked={onMemberKicked}
       />
     </aside>
   );

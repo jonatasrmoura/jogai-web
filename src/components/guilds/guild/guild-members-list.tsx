@@ -14,7 +14,7 @@ import {
   DropdownMenuTrigger,
 } from "../../ui/dropdown-menu";
 
-import type { GuildMember } from "../../../services/guilds/get-guild-details.service";
+import type { GuildMember } from "../../../types/guilds/guild-member";
 import {
   kickMember,
   transferOwnership,
@@ -26,13 +26,13 @@ import { GuildProfileModal } from "./guild-profile-modal";
 interface GuildMembersListProps {
   guildUuid: string;
   guildMembers: GuildMember[];
-  onMemberKicked: (memberUuid: string) => void;
+  // onMemberKicked: (memberUuid: string) => void;
 }
 
 export function GuildMembersList({
   guildUuid,
   guildMembers,
-  onMemberKicked,
+  // onMemberKicked,
 }: GuildMembersListProps) {
   // 👇 Estado para controlar quem foi clicado para abrir o perfil
   const [selectedMember, setSelectedMember] = useState<GuildMember | null>(
@@ -76,7 +76,9 @@ export function GuildMembersList({
                     </div>
                   )}
 
-                  <span className="absolute bottom-0 right-0 w-2.5 h-2.5 bg-emerald-500 border-2 border-card rounded-full" />
+                  <span
+                    className={`absolute bottom-0 right-0 w-2.5 h-2.5 ${member.isOnline ? "bg-emerald-500" : "bg-red-500"} border-2 border-card rounded-full`}
+                  />
                 </div>
 
                 {/* Container do Nome e Cargo */}
@@ -166,7 +168,7 @@ export function GuildMembersList({
                         if (result.isConfirmed) {
                           try {
                             await kickMember(guildUuid, member.userUuid);
-                            onMemberKicked(member.userUuid);
+                            // onMemberKicked(member.userUuid);
                             Swal.fire(
                               "Expulso",
                               "O membro foi removido da guilda.",

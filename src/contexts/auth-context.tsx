@@ -25,6 +25,7 @@ import { registerUserAuthService } from "../services/register-user-auth.service"
 import { destroyAccessTokenCookies } from "../config/cookies/auth/destroy-access-token-cookies";
 import { updateAvatarService } from "../services/user-auth/update-avatar.service";
 import { successMessage } from "../lib/messages/success-message";
+import { useHeartbeat } from "../hooks/use-heart-beat";
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -50,6 +51,8 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
   const [loading, setLoading] = useState<boolean>(false);
   const [userIsUpdate, setUserIsUpdate] = useState<boolean>(true);
+
+  useHeartbeat(isAuthenticated);
 
   const isAuthPage = pathname === "/login";
 

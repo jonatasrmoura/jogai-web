@@ -3,6 +3,7 @@ import { Roboto, Roboto_Mono } from "next/font/google";
 import "./globals.css";
 
 import { AuthProvider } from "../contexts/auth-context";
+import { HeartbeatRunner } from "../components/heartbeat-runner";
 
 const roboto = Roboto({
   variable: "--font-roboto-sans",
@@ -32,6 +33,7 @@ export default async function RootLayout({
         className={`${roboto.variable} ${robotoMono.variable} antialiased bg-background text-foreground flex flex-col min-h-screen`}
       >
         <AuthProvider>
+          <HeartbeatRunner />
           <main className="flex-grow flex flex-col">{children}</main>
         </AuthProvider>
       </body>

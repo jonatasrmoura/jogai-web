@@ -42,7 +42,7 @@ export function useGuildChat(guildUuid: string) {
 
     // Troca o http:// por ws:// dinamicamente usando nossa env
     const wsBaseUrl = env.NEXT_PUBLIC_API_BASE_URL.replace(/^http/, "ws");
-    const ws = new WebSocket(`${wsBaseUrl}/guilds/${guildUuid}/chat`);
+    const ws = new WebSocket(`${wsBaseUrl}/ws/guilds/${guildUuid}/chat`);
 
     socketRef.current = ws;
 
